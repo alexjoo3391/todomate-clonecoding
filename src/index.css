@@ -1,0 +1,141 @@
+* {
+    padding: 0;
+    margin: 0;
+    user-select: none;
+}
+
+.calendar {
+    margin: 10px;
+}
+
+.selected {
+    background-color: black !important;
+    color: white;
+}
+
+.dayBox {
+    width: 30px;
+    height: 30px;
+}
+
+table {
+    text-align: center;
+}
+
+.today {
+    background-color: #cccccc;
+}
+
+.todoInput1, .todoInput2, .todoInput3 {
+    display: none;
+}
+
+.display {
+    display: flex !important;
+}
+
+input[type=text] {
+    width: calc(100% - 20px);
+    margin-top: 1px;
+    background-color: #eeeeee;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.todocheck {
+    display: flex;
+    gap: 5px;
+}
+
+.modal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000066;
+    display: none;
+}
+
+.modal {
+    width: 80%;
+    height: 180px;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    background-color: white;
+    padding: 25px;
+}
+
+.modalShow {
+    display: block !important;
+}
+
+.calendar-month {
+    max-width: 226px;
+    border-bottom: 2px solid black;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.calendar-month button, .todocheck button, .todo > p > button, .display button {
+    background-color: black;
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+}
+
+.calendar-month button:hover, .todocheck button:hover, .todo > p > button:hover, .display button:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.todo {
+    max-width: 226px;
+}
+
+.todo > * {
+    justify-content: space-between;
+}
+
+.todo > p {
+    border-bottom: 2px solid black;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.todo-check {
+    display: flex;
+}
+
+.todo-check input[type=checkbox] {
+    display: none;
+}
+
+.todo-check label {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    background-color: white;
+    border: 1px solid black;
+    color: #999999;
+    text-align: center;
+}
+
+.todo-check input:checked ~ label {
+    background-color: black !important;
+    color: white !important;
+}
+
+.td {
+    cursor: pointer;
+}
+
+.td:hover p {
+    background-color: black;
+    color: white;
+}
