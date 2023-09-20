@@ -2,14 +2,23 @@ import {useRecoilState} from 'recoil'
 
 import { modalCurrentMonthAtom } from './atoms';
 
-export default function ShowModalMonth({today, monthOnClick}) {
+export default function ShowModalMonth({today}) {
     const [modalCurrentMonth, setModalCurrentMonth] = useRecoilState(modalCurrentMonthAtom);
-    const monthFromToday = (today.getMonth() + modalCurrentMonthAtom) % 12 + 1;
+    const monthFromToday = (today.getMonth() + modalCurrentMonth) % 12 + 1;
+
+    function monthOnClick(pn) {
+        if (pn) {
+            setModalCurrentMonth(modalCurrentMonth + 1);
+        } else {
+            setModalCurrentMonth(modalCurrentMonth - 1);
+        }
+    }
+
 
     return (
         <div key={'month'} className='calendar-month'>
             <p>
-                {(today.getFullYear() + (parseInt(Math.floor((today.getMonth() + modalCurrentMonth) / 12))) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
+                {(today.getFullYear() + (Math.floor((today.getMonth() + modalCurrentMonth) / 12)) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
             </p>
             <div>
                 <button className='PrevMonthBtn' onClick={() => monthOnClick(false)}>&laquo;</button>

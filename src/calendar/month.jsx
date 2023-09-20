@@ -1,11 +1,33 @@
 import {useRecoilState} from 'recoil'
 
-import {currentMonthAtom} from './atoms';
+import {currentMonthAtom, selectDayAtom} from './atoms';
 
 // 상단 년,월 표시
-export default function ShowMonth({today, monthOnClick}) {
+export default function ShowMonth({today}) {
+
     const [currentMonth, setCurrentMonth] = useRecoilState(currentMonthAtom);
+    const [selectDay, setSelectDay] = useRecoilState(selectDayAtom);
     const monthFromToday = (today.getMonth() + currentMonth) % 12 + 1;
+
+    function monthOnClick(pn) {
+        if (pn) {
+            var select = 1
+            setCurrentMonth(currentMonth + 1);
+        } else {
+            var select = new Date(today.getFullYear(), today.getMonth() + currentMonth, 0).getDate();
+            setCurrentMonth(currentMonth - 1);
+        }
+        const selected = document.querySelector('.selected');
+        if (selected) {
+            changeSelectDay(select);
+            selected.classList.remove('selected');
+            document.querySelector('.td' + select).classList.add('selected');
+        }
+    }
+
+    function changeSelectDay(day) {
+        setSelectDay(day);
+    }
 
     return (
         <div key={'month'} className='calendar-month'>

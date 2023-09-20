@@ -20,26 +20,6 @@ export default function Calendar() {
     const [todoDelete, setTodoDelete] = useRecoilState(deleteStateAtom);
     const [todoModify, setTodoModify] = useRecoilState(modifyStateAtom);
 
-    function setMonthPrevNext(pn) {
-        if (pn) {
-            var select = 1
-            setCurrentMonth(currentMonth + 1);
-        } else {
-            var select = new Date(today.getFullYear(), today.getMonth() + currentMonth, 0).getDate();
-            setCurrentMonth(currentMonth - 1);
-        }
-        const selected = document.querySelector('.selected');
-        if (selected) {
-            changeSelectDay(select);
-            selected.classList.remove('selected');
-            document.querySelector('.td' + select).classList.add('selected');
-        }
-    }
-
-    function changeSelectDay(day) {
-        setSelectDay(day);
-    }
-
     function tdEventListener(e) {
         const day = e.target.innerText;
         if (day !== '' || e.target.nodeName === 'DIV') {
@@ -71,7 +51,7 @@ export default function Calendar() {
 
     return (
         <div className='calendar'>
-            <ShowMonth today={today} monthOnClick={setMonthPrevNext} changeSelectDay={changeSelectDay}/>
+            <ShowMonth today={today}/>
             <ShowDate today={today} tdEventListener={tdEventListener} todoItems={todoItems}/>
             <ShowTodo today={today} reloadTodoItems={reloadTodoItems} turnModal={turnModal}/>
             <ShowModal/>
