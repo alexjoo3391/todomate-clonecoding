@@ -1,20 +1,15 @@
 import {useRecoilState} from 'recoil'
 
-import {currentMonthAtom, selectDayAtom} from './atoms';
-
 // 달력 표시
-export default function ShowDate({today, tdEventListener, todoItems = {}}) {
+export default function ShowDate({today, tdEventListener, todoItems = {}, currentMonth, selectDay}) {
 
     let todoCount;
     let isExist;
-    const [selectDay, setSelectDay] = useRecoilState(selectDayAtom);
-    const [currentMonth, setCurrentMonth] = useRecoilState(currentMonthAtom);
 
     const firstDay = new Date(today.getFullYear(), today.getMonth() + currentMonth, 1);
     const lastDay = new Date(today.getFullYear(), today.getMonth() + currentMonth + 1, 0);
     const weekDay = (firstDay.getDay() ? firstDay.getDay() : 7);
     const weeks = Math.ceil((weekDay + lastDay.getDate() - 1) / 7);
-
 
     const days = [];
     for (let i = 0; i < weeks; i++) {

@@ -1,9 +1,5 @@
-import {useRecoilState} from 'recoil'
 
-import { modalCurrentMonthAtom } from './atoms';
-
-export default function ShowModalMonth({today}) {
-    const [modalCurrentMonth, setModalCurrentMonth] = useRecoilState(modalCurrentMonthAtom);
+export default function ShowModalMonth({today, modalCurrentMonth, setModalCurrentMonth}) {
     const monthFromToday = (today.getMonth() + modalCurrentMonth) % 12 + 1;
 
     function monthOnClick(pn) {

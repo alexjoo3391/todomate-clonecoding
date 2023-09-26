@@ -8,16 +8,14 @@ import {
     modifyStateAtom,
     todoMemoAtom,
     todoMemoValueAtom,
-    todoModifyInputDisplayAtom1,
-    todoModifyInputDisplayAtom2,
-    todoModifyInputDisplayAtom3,
+    todoModifyInputDisplayAtom,
     todoModifyNthAtom,
-    modalCurrentMonthAtom,
 } from './atoms';
 
 import ShowModalMonth from "./modalMonth.jsx";
 import ShowModalDate from "./modalDate.jsx";
 import ShowMemo from "./memo.jsx";
+import {useState} from "react";
 
 // 모달 표시 
 export default function ShowModal() {
@@ -28,24 +26,22 @@ export default function ShowModal() {
     const [todoChangeDayValue, setTodoChangeDayValue] = useRecoilState(changeDayStateValueAtom);
     const [todoMemo, setTodoMemo] = useRecoilState(todoMemoAtom);
     const [todoMemoValue, setTodoMemoValue] = useRecoilState(todoMemoValueAtom);
-    const [todoModifyInputDisplay1, setTodoModifyInputDisplay1] = useRecoilState(todoModifyInputDisplayAtom1);
-    const [todoModifyInputDisplay2, setTodoModifyInputDisplay2] = useRecoilState(todoModifyInputDisplayAtom2);
-    const [todoModifyInputDisplay3, setTodoModifyInputDisplay3] = useRecoilState(todoModifyInputDisplayAtom3);
+    const [todoModifyInputDisplay, setTodoModifyInputDisplay] = useRecoilState(todoModifyInputDisplayAtom);
     const [isShowModal, setIsShowModal] = useRecoilState(isShowModalAtom);
     const [todoModifyNth, setTodoModifyNth] = useRecoilState(todoModifyNthAtom);
-    const [modalCurrentMonth, setModalCurrentMonth] = useRecoilState(modalCurrentMonthAtom);
+    const [modalCurrentMonth, setModalCurrentMonth] = useState(0);
 
     function modalModify(e) {
         e.stopPropagation();
         setIsShowModal(false);
         setTodoModify(todoModify * -1 - 2);
         if (todoModifyNth === 1) {
-            setTodoModifyInputDisplay1(true);
+            setTodoModifyInputDisplay([true, false, false]);
         } else {
             if (todoModifyNth === 2) {
-                setTodoModifyInputDisplay2(true);
+                setTodoModifyInputDisplay([false, true, false]);
             } else {
-                setTodoModifyInputDisplay3(true);
+                setTodoModifyInputDisplay([false, false, true]);
             }
         }
     }
@@ -95,6 +91,10 @@ export default function ShowModal() {
 
     }
 
+    function setModalMonth(n) {
+        setModalCurrentMonth(n);
+    }
+
     const today = new Date();
 
 
@@ -103,8 +103,8 @@ export default function ShowModal() {
     const modal = todoChangeDay ?
         <>
             <div className='modal' >
-                <ShowModalMonth today={today}/>
-                <ShowModalDate today={today} tdEventListener={tdEventListener}/>
+                <ShowModalMonth today={today} modalCurrentMonth={modalCurrentMonth} setModalCurrentMonth={setModalMonth}/>
+                <ShowModalDate today={today} tdEventListener={tdEventListener} modalCurrentMonth={modalCurrentMonth}/>
             </div>
         </> :
         todoMemo ?

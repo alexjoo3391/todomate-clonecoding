@@ -1,12 +1,7 @@
 import {useRecoilState} from 'recoil'
 
-import {modalCurrentMonthAtom, selectDayAtom} from './atoms';
-
 // 달력 표시
-export default function ShowModalDate({today, tdEventListener, todoItems = []}) {
-
-    const [selectDay, setSelectDay] = useRecoilState(selectDayAtom);
-    const [modalCurrentMonth, setModalCurrentMonth] = useRecoilState(modalCurrentMonthAtom);
+export default function ShowModalDate({today, tdEventListener, todoItems = [], modalCurrentMonth}) {
 
     const firstDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, 1);
     const lastDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth + 1, 0);

@@ -1,12 +1,8 @@
 import {useRecoilState} from 'recoil'
 
-import {currentMonthAtom, selectDayAtom} from './atoms';
-
 // 상단 년,월 표시
-export default function ShowMonth({today}) {
+export default function ShowMonth({today, currentMonth, setCurrentMonth, setSelectDay}) {
 
-    const [currentMonth, setCurrentMonth] = useRecoilState(currentMonthAtom);
-    const [selectDay, setSelectDay] = useRecoilState(selectDayAtom);
     const monthFromToday = (today.getMonth() + currentMonth) % 12 + 1;
 
     function monthOnClick(pn) {
