@@ -4,7 +4,7 @@ import {useRecoilState} from 'recoil'
 export default function ShowDate({today, tdEventListener, todoItems = {}, currentMonth, selectDay}) {
 
     let todoCount;
-    let isExist; //
+    let isExist;
 
     const firstDay = new Date(today.getFullYear(), today.getMonth() + currentMonth, 1);
     const lastDay = new Date(today.getFullYear(), today.getMonth() + currentMonth + 1, 0);
@@ -22,27 +22,27 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
                 const todoDateString = todoDate.getFullYear().toString() + (('0' + (todoDate.getMonth() + 1)).slice(-2)).toString() + (('0' + todoDate.getDate()).slice(-2)).toString()
                 todoCount = 0;
                 isExist = false;
-                if (todoItems.hasOwnProperty('todoCheck1' + todoDateString)) {
+                if (todoItems.hasOwnProperty(`todoCheck1${todoDateString}`)) {
                     isExist = true;
-                    const todoDay1 = JSON.parse(todoItems['todoCheck1' + todoDateString]);
+                    const todoDay1 = JSON.parse(todoItems[`todoCheck1${todoDateString}`]);
                     for (let i = 0; i < todoDay1.length; i++) {
                         if (todoDay1[i] === 0) {
                             todoCount++;
                         }
                     }
                 }
-                if (todoItems.hasOwnProperty('todoCheck2' + todoDateString)) {
+                if (todoItems.hasOwnProperty(`todoCheck2${todoDateString}`)) {
                     isExist = true;
-                    const todoDay2 = JSON.parse(todoItems['todoCheck2' + todoDateString]);
+                    const todoDay2 = JSON.parse(todoItems[`todoCheck2${todoDateString}`]);
                     for (let i = 0; i < todoDay2.length; i++) {
                         if (todoDay2[i] === 0) {
                             todoCount++;
                         }
                     }
                 }
-                if (todoItems.hasOwnProperty('todoCheck3' + todoDateString)) {
+                if (todoItems.hasOwnProperty(`todoCheck3${todoDateString}`)) {
                     isExist = true;
-                    const todoDay3 = JSON.parse(todoItems['todoCheck3' + todoDateString]);
+                    const todoDay3 = JSON.parse(todoItems[`todoCheck3${todoDateString}`]);
                     for (let i = 0; i < todoDay3.length; i++) {
                         if (todoDay3[i] === 0) {
                             todoCount++;
@@ -60,7 +60,7 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
                 </td>
             );
         }
-        days.push(<tr key={'tr' + i}>{week}</tr>);
+        days.push(<tr key={`tr${i}`}>{week}</tr>);
     }
 
     return (

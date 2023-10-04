@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useState} from 'react';
 import {useRecoilState, useSetRecoilState} from 'recoil'
 
@@ -8,7 +8,8 @@ import {
     todoModifyInputDisplayAtom,
     todoModifyNthAtom,
     changeDayStateAtom,
-    todoMemoAtom, todoMemoValueAtom,
+    todoMemoAtom,
+    todoMemoValueAtom,
 } from './atoms';
 
 // 목표 리스트 표시
@@ -26,28 +27,28 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
 
     const [todoModifyInputDisplay, setTodoModifyInputDisplay] = useRecoilState(todoModifyInputDisplayAtom);
 
-    const [todoModifyNth, setTodoModifyNth] = useRecoilState(todoModifyNthAtom);
+    const setTodoModifyNth = useSetRecoilState(todoModifyNthAtom);
     const [todoDeleteNth, setTodoDeleteNth] = useState(0);
-    const [todoChangeDay, setTodoChangeDay] = useRecoilState(changeDayStateAtom);
+    const setTodoChangeDay = useSetRecoilState(changeDayStateAtom);
 
-    const [todoMemo, setTodoMemo] = useRecoilState(todoMemoAtom);
+    const setTodoMemo = useSetRecoilState(todoMemoAtom);
     const setTodoMemoValue = useSetRecoilState(todoMemoValueAtom);
 
-    const newTodo = [JSON.parse(sessionStorage.getItem('todo1' + dayString)),
-        JSON.parse(sessionStorage.getItem('todo2' + dayString)),
-        JSON.parse(sessionStorage.getItem('todo3' + dayString))];
+    const newTodo = [JSON.parse(sessionStorage.getItem(`todo1${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todo2${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todo3${dayString}`))];
 
-    const newTodoCheck = [JSON.parse(sessionStorage.getItem('todoCheck1' + dayString)),
-        JSON.parse(sessionStorage.getItem('todoCheck2' + dayString)),
-        JSON.parse(sessionStorage.getItem('todoCheck3' + dayString))];
+    const newTodoCheck = [JSON.parse(sessionStorage.getItem(`todoCheck1${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todoCheck2${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todoCheck3${dayString}`))];
 
-    const newTodoMemo = [JSON.parse(sessionStorage.getItem('todoMemo1' + dayString)),
-        JSON.parse(sessionStorage.getItem('todoMemo2' + dayString)),
-        JSON.parse(sessionStorage.getItem('todoMemo3' + dayString))];
+    const newTodoMemo = [JSON.parse(sessionStorage.getItem(`todoMemo1${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todoMemo2${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todoMemo3${dayString}`))];
 
-    const newTodoMemoCheck = [JSON.parse(sessionStorage.getItem('todoMemoCheck1' + dayString)),
-        JSON.parse(sessionStorage.getItem('todoMemoCheck2' + dayString)),
-        JSON.parse(sessionStorage.getItem('todoMemoCheck3' + dayString))];
+    const newTodoMemoCheck = [JSON.parse(sessionStorage.getItem(`todoMemoCheck1${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todoMemoCheck2${dayString}`)),
+        JSON.parse(sessionStorage.getItem(`todoMemoCheck3${dayString}`))];
 
     function enterCheck(e, func) {
         if (e.key === 'Enter') {
@@ -73,11 +74,11 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
 
                 const todoContent = modifyInput
                     ? modifyInput
-                    : <p key={'todoArr' + n + '' + i}>{arr[i]}</p>
+                    : <p key={`todoArr${n}${i}`}>{arr[i]}</p>
 
                 const todoModifyButton = modifyInput
                     ? <button onClick={() => todoModifyConfirm(n, i)}>+</button>
-                    : <button key={'todoButton' + n + '' + i} onClick={() => todoSetting(n, i)}>...</button>;
+                    : <button key={`todoButton${n}${i}`} onClick={() => todoSetting(n, i)}>...</button>;
 
                 let todoMemo = '';
 
@@ -87,13 +88,13 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
                 }
 
                 const todoList = (
-                    <React.Fragment key={'todoBox' + n + '' + i}>
+                    <React.Fragment key={`todoBox${n}${i}`}>
                         <div className='todoCheck'>
                             <div className='todo-check'>
-                                <input  type="checkbox" id={'check' + n + '' + i}
+                                <input  type="checkbox" id={`check${n}${i}`}
                                        onChange={() => todoChecked(n, i)}
                                        checked={newTodoCheck[n - 1][i] === 1}/>
-                                <label htmlFor={'check' + n + '' + i}>✓</label>
+                                <label htmlFor={`check${n}${i}`}>✓</label>
                                 {todoContent}
                             </div>
                             {todoModifyButton}
@@ -137,11 +138,11 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
 
 
     function todoInputClick(n) {
-        const val = encodeURI(document.querySelector('.todoInput' + n + ' input').value);
-        sessionStorage.setItem('todo' + n + '' + dayString, newTodo[n - 1] ? JSON.stringify(newTodo[n - 1].concat(val)) : JSON.stringify([val]));
-        sessionStorage.setItem('todoCheck' + n + '' + dayString, newTodoCheck[n - 1] ? JSON.stringify(newTodoCheck[n - 1].concat(0)) : JSON.stringify([0]));
-        sessionStorage.setItem('todoMemo' + n + '' + dayString, newTodoMemo[n - 1] ? JSON.stringify(newTodoMemo[n - 1].concat(0)) : JSON.stringify([0]));
-        sessionStorage.setItem('todoMemoCheck' + n + '' + dayString, newTodoMemoCheck[n - 1] ? JSON.stringify(newTodoMemoCheck[n - 1].concat(0)) : JSON.stringify([0]));
+        const val = encodeURI(document.querySelector(`.todoInput${n} input`).value);
+        sessionStorage.setItem(`todo${n}${dayString}`, newTodo[n - 1] ? JSON.stringify(newTodo[n - 1].concat(val)) : JSON.stringify([val]));
+        sessionStorage.setItem(`todoCheck${n}${dayString}`, newTodoCheck[n - 1] ? JSON.stringify(newTodoCheck[n - 1].concat(0)) : JSON.stringify([0]));
+        sessionStorage.setItem(`todoMemo${n}${dayString}`, newTodoMemo[n - 1] ? JSON.stringify(newTodoMemo[n - 1].concat(0)) : JSON.stringify([0]));
+        sessionStorage.setItem(`todoMemoCheck${n}${dayString}`, newTodoMemoCheck[n - 1] ? JSON.stringify(newTodoMemoCheck[n - 1].concat(0)) : JSON.stringify([0]));
         reloadTodoItems();
     }
 
@@ -174,14 +175,14 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
         const todoChecked = newTodoCheck[n - 1].slice();
         let rest = todoChecked[i];
         rest = parseInt(rest) * -1 + 1;
-        sessionStorage.setItem('todoCheck' + n + '' + dayString, JSON.stringify(todoChecked.slice(0, i).concat(rest, todoChecked.slice(i + 1))));
+        sessionStorage.setItem(`todoCheck${n}${dayString}`, JSON.stringify(todoChecked.slice(0, i).concat(rest, todoChecked.slice(i + 1))));
         reloadTodoItems();
     }
 
     function todoModifyConfirm(n, i) {
         const val = document.querySelector('.todoModifyInput').value;
-        const sessionVal= JSON.parse(sessionStorage.getItem('todo' + n + '' + dayString));
-        sessionStorage.setItem('todo' + n + '' + dayString, JSON.stringify(sessionVal.slice(0, i).concat(val, sessionVal.slice(i + 1))));
+        const sessionVal= JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
+        sessionStorage.setItem(`todo${n}${dayString}`, JSON.stringify(sessionVal.slice(0, i).concat(val, sessionVal.slice(i + 1))));
         reloadTodoItems();
     }
 
@@ -192,10 +193,10 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
     }
 
     function todoDeleteConfirm(n, i) {
-        const sessionVal = JSON.parse(sessionStorage.getItem('todo' + n + '' + dayString));
-        const sessionCheckVal = JSON.parse(sessionStorage.getItem('todoCheck' + n + '' + dayString));
-        const sessionMemoVal = JSON.parse(sessionStorage.getItem('todoMemo' + n + '' + dayString));
-        const sessionMemoCheckVal = JSON.parse(sessionStorage.getItem('todoMemoCheck' + n + '' + dayString));
+        const sessionVal = JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
+        const sessionCheckVal = JSON.parse(sessionStorage.getItem(`todoCheck${n}${dayString}`));
+        const sessionMemoVal = JSON.parse(sessionStorage.getItem(`todoMemo${n}${dayString}`));
+        const sessionMemoCheckVal = JSON.parse(sessionStorage.getItem(`todoMemoCheck${n}${dayString}`));
 
         const newVal = JSON.stringify(sessionVal.slice(0, i).concat(sessionVal.slice(i + 1)));
         const newCheckVal = JSON.stringify(sessionCheckVal.slice(0, i).concat(sessionCheckVal.slice(i + 1)));
@@ -203,36 +204,40 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
         const newMemoCheckVal = JSON.stringify(sessionMemoCheckVal.slice(0, i).concat(sessionMemoCheckVal.slice(i + 1)));
 
         if(newVal !== '[]') {
-            sessionStorage.setItem('todo' + n + '' + dayString, newVal);
-            sessionStorage.setItem('todoCheck' + n + '' + dayString, newCheckVal);
-            sessionStorage.setItem('todoMemo' + n + '' + dayString, newMemoVal);
-            sessionStorage.setItem('todoMemoCheck' + n + '' + dayString, newMemoCheckVal);
+            sessionStorage.setItem(`todo${n}${dayString}`, newVal);
+            sessionStorage.setItem(`todoCheck${n}${dayString}`, newCheckVal);
+            sessionStorage.setItem(`todoMemo${n}${dayString}`, newMemoVal);
+            sessionStorage.setItem(`todoMemoCheck${n}${dayString}`, newMemoCheckVal);
         } else {
-            sessionStorage.removeItem('todo' + n + '' + dayString);
-            sessionStorage.removeItem('todoCheck' + n + '' + dayString);
-            sessionStorage.removeItem('todoMemo' + n + '' + dayString);
-            sessionStorage.removeItem('todoMemoCheck' + n + '' + dayString);
+            sessionStorage.removeItem(`todo${n}${dayString}`);
+            sessionStorage.removeItem(`todoCheck${n}${dayString}`);
+            sessionStorage.removeItem(`todoMemo${n}${dayString}`);
+            sessionStorage.removeItem(`todoMemoCheck${n}${dayString}`);
         }
 
         reloadTodoItems();
     }
 
-    if (todoDelete > -1) {
-        todoDeleteConfirm(todoDeleteNth, todoDelete);
-    }
+    useEffect(() => {
+        if (todoDelete > -1) {
+            todoDeleteConfirm(todoDeleteNth, todoDelete);
+        }
+    }, [todoDelete]);
 
-    const todos = [1, 2, 3].map((n) => {
+    return (
+        <div key={'todoContainer'} className='todo'>
+            <Todos showInput={showInput} getTodoExtend={getTodoExtend} />
+        </div>
+    )
+}
+
+function Todos({showInput, getTodoExtend}) {
+    return [1, 2, 3].map((n) => {
         return (
             <React.Fragment key={`todo${n}`}>
                 <p>목표 {n} <button onClick={(e) => showInput(e, n - 1)}>+</button></p>
                 {getTodoExtend(n)}
             </React.Fragment>
         )
-    })
-
-    return (
-        <div key={'todoContainer'} className='todo'>
-            {todos}
-        </div>
-    )
+    });
 }

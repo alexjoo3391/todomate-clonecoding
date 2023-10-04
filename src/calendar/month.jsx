@@ -6,11 +6,12 @@ export default function ShowMonth({today, currentMonth, setCurrentMonth, setSele
     const monthFromToday = (today.getMonth() + currentMonth) % 12 + 1;
 
     function monthOnClick(pn) {
+        let select;
         if (pn) {
-            var select = 1
+            select = 1;
             setCurrentMonth(currentMonth + 1);
         } else {
-            var select = new Date(today.getFullYear(), today.getMonth() + currentMonth, 0).getDate();
+            select = new Date(today.getFullYear(), today.getMonth() + currentMonth, 0).getDate();
             setCurrentMonth(currentMonth - 1);
         }
         const selected = document.querySelector('.selected');

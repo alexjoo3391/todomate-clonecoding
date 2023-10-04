@@ -32,7 +32,7 @@ export default function Calendar() {
                 setSelectDay(day);
                 e.target.classList.add('selected')
             } else {
-                let newDay = document.querySelector('.td' + e.target.id + ' p')
+                let newDay = document.querySelector(`.td${e.target.id} p`);
                 setSelectDay(newDay.innerText);
                 newDay.classList.add('selected');
             }
@@ -62,7 +62,7 @@ export default function Calendar() {
             <ShowMonth today={today} currentMonth={currentMonth} setCurrentMonth={setMonth} setSelectDay={setDay}/>
             <ShowDate today={today} tdEventListener={tdEventListener} todoItems={todoItems} currentMonth={currentMonth} selectDay={selectDay}/>
             <ShowTodo today={today} reloadTodoItems={reloadTodoItems} turnModal={turnModal} currentMonth={currentMonth} selectDay={selectDay}/>
-            <ShowModal/>
+            <ShowModal currentMonth={currentMonth}/>
         </div>
     )
 }
