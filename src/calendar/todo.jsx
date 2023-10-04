@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
-import {useRecoilState} from 'recoil'
+import {useRecoilState, useSetRecoilState} from 'recoil'
 
 import {
     deleteStateAtom,
@@ -8,6 +8,7 @@ import {
     todoModifyInputDisplayAtom,
     todoModifyNthAtom,
     changeDayStateAtom,
+    todoMemoAtom, todoMemoValueAtom,
 } from './atoms';
 
 // 목표 리스트 표시
@@ -28,6 +29,9 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
     const [todoModifyNth, setTodoModifyNth] = useRecoilState(todoModifyNthAtom);
     const [todoDeleteNth, setTodoDeleteNth] = useState(0);
     const [todoChangeDay, setTodoChangeDay] = useRecoilState(changeDayStateAtom);
+
+    const [todoMemo, setTodoMemo] = useRecoilState(todoMemoAtom);
+    const setTodoMemoValue = useSetRecoilState(todoMemoValueAtom);
 
     const newTodo = [JSON.parse(sessionStorage.getItem('todo1' + dayString)),
         JSON.parse(sessionStorage.getItem('todo2' + dayString)),
@@ -75,11 +79,12 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
                     ? <button onClick={() => todoModifyConfirm(n, i)}>+</button>
                     : <button key={'todoButton' + n + '' + i} onClick={() => todoSetting(n, i)}>...</button>;
 
-                const todoMemo = (
-                    newTodoMemoCheck[n - 1][i] !== 0 ?
-                    <p>메모</p> :
-                    ''
-                )
+                let todoMemo = '';
+
+                if(newTodoMemoCheck[n - 1][i] !== 0) {
+                    todoMemo = <p>메모</p>;
+                    setTodoMemoValue(newTodoMemo[n - 1]);
+                }
 
                 const todoList = (
                     <React.Fragment key={'todoBox' + n + '' + i}>
@@ -143,7 +148,7 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
     function todoSetting(n, i) {
         setTodoModifyNth(n);
         setTodoDeleteNth(n);
-        turnModal(true);
+        turnModal(i);
         const newVal = -2 - i;
         setTodoModify(newVal);
         setTodoDelete(newVal);
@@ -155,8 +160,9 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
         });
         document.querySelector('.modal-container').addEventListener('click', () => {
             if(!isModalClick) {
+                turnModal(-1);
+                setTodoMemo(false);
                 setTodoChangeDay(false);
-                turnModal(false);
             }else {
                 isModalClick = false;
             }

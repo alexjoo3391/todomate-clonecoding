@@ -64,14 +64,14 @@ input[type=text] {
 }
 
 .modal {
-    width: 80%;
-    height: 180px;
+    width: 210px;
+    height: 190px;
     position: absolute;
     left: 50%;
     bottom: 0;
     transform: translate(-50%, 0);
     background-color: white;
-    padding: 25px;
+    padding: 20px;
 }
 
 .modalShow {
@@ -168,4 +168,23 @@ input[type=text] {
     font-weight: bold;
     font-size: 13px;
     color: #555555;
+}
+
+.memoMenu {
+    width: 100%;
+    display: flex;
+}
+
+.memoMenu button {
+    width: 50%;
+}
+
+.memoShow {
+    overflow: scroll;
+    padding: 5px;
+    background-color: #cccccc;
+}
+
+.memoShow::-webkit-scrollbar {
+    display: none;
 }

@@ -2,7 +2,6 @@ import {useRecoilState} from 'recoil'
 
 import {
     changeDayStateAtom,
-    changeDayStateValueAtom,
     deleteStateAtom,
     isShowModalAtom,
     modifyStateAtom,
@@ -23,7 +22,6 @@ export default function ShowModal() {
     const [todoModify, setTodoModify] = useRecoilState(modifyStateAtom);
     const [todoDelete, setTodoDelete] = useRecoilState(deleteStateAtom);
     const [todoChangeDay, setTodoChangeDay] = useRecoilState(changeDayStateAtom);
-    const [todoChangeDayValue, setTodoChangeDayValue] = useRecoilState(changeDayStateValueAtom);
     const [todoMemo, setTodoMemo] = useRecoilState(todoMemoAtom);
     const [todoMemoValue, setTodoMemoValue] = useRecoilState(todoMemoValueAtom);
     const [todoModifyInputDisplay, setTodoModifyInputDisplay] = useRecoilState(todoModifyInputDisplayAtom);
@@ -33,7 +31,7 @@ export default function ShowModal() {
 
     function modalModify(e) {
         e.stopPropagation();
-        setIsShowModal(false);
+        setIsShowModal(-1);
         setTodoModify(todoModify * -1 - 2);
         if (todoModifyNth === 1) {
             setTodoModifyInputDisplay([true, false, false]);
@@ -47,7 +45,7 @@ export default function ShowModal() {
     }
 
     function modalDelete() {
-        setIsShowModal(false);
+        setIsShowModal(-1);
         setTodoDelete(todoDelete * -1 - 2);
     }
 
@@ -87,18 +85,59 @@ export default function ShowModal() {
         setTodoChangeDay(false);
     }
 
-    function menuConfirm() {
+    function memoConfirm() {
+        const memoValue = document.querySelector('#memo').value;
+        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, parseInt(document.querySelector('.selected').innerText));
+        const selectedDayString = selectedDate.getFullYear().toString()
+            + (('0' + (selectedDate.getMonth() + 1)).slice(-2)).toString()
+            + (('0' + selectedDate.getDate()).slice(-2)).toString();
 
+        const memo = JSON.parse(sessionStorage.getItem('todoMemo' + todoModifyNth + '' + selectedDayString));
+        const memoCheck = JSON.parse(sessionStorage.getItem('todoMemoCheck' + todoModifyNth + '' + selectedDayString));
+
+        const i = isShowModal;
+
+        setTodoMemoValue(memoValue);
+        sessionStorage.setItem('todoMemoCheck' + todoModifyNth + '' + selectedDayString, JSON.stringify(memoCheck.slice(0, i).concat(1, memoCheck.slice(i + 1))));
+        sessionStorage.setItem('todoMemo' + todoModifyNth + '' + selectedDayString, JSON.stringify(memo.slice(0, i).concat(memoValue, memo.slice(i + 1))));
+        setTodoMemo(false);
+        setIsShowModal(-1);
     }
 
     function setModalMonth(n) {
         setModalCurrentMonth(n);
     }
 
+    function memoDelete() {
+        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, parseInt(document.querySelector('.selected').innerText));
+        const selectedDayString = selectedDate.getFullYear().toString()
+            + (('0' + (selectedDate.getMonth() + 1)).slice(-2)).toString()
+            + (('0' + selectedDate.getDate()).slice(-2)).toString();
+
+        const memo = JSON.parse(sessionStorage.getItem('todoMemo' + todoModifyNth + '' + selectedDayString));
+        const memoCheck = JSON.parse(sessionStorage.getItem('todoMemoCheck' + todoModifyNth + '' + selectedDayString));
+
+        const i = isShowModal;
+
+        sessionStorage.setItem('todoMemoCheck' + todoModifyNth + '' + selectedDayString, JSON.stringify(memoCheck.slice(0, i).concat(0, memoCheck.slice(i + 1))));
+        sessionStorage.setItem('todoMemo' + todoModifyNth + '' + selectedDayString, JSON.stringify(memo.slice(0, i).concat(0, memo.slice(i + 1))));
+        setTodoMemo(false);
+        setIsShowModal(-1);
+        setTodoMemoValue(JSON.parse(sessionStorage.getItem('todoMemo' + todoModifyNth + '' + selectedDayString)));
+    }
+
     const today = new Date();
 
+    let memoShow = '';
+    const memoModalValue = todoMemoValue[isShowModal] ? todoMemoValue[isShowModal] : null;
+    if(memoModalValue !== null) {
+        memoShow = (
+            <pre className='memoShow'>
+                {memoModalValue}
+            </pre>
+        );
 
-
+    }
 
     const modal = todoChangeDay ?
         <>
@@ -110,20 +149,21 @@ export default function ShowModal() {
         todoMemo ?
         <>
             <div className='modal'>
-                <ShowMemo menuConfirm={menuConfirm}/>
+                <ShowMemo memoConfirm={memoConfirm} memoDelete={memoDelete} memoModalValue={memoModalValue}/>
             </div>
         </> :
         <>
             <div className='modal' >
                 <button onClick={(e) => modalModify(e)}>수정</button>
                 <button onClick={modalDelete}>삭제</button>
+                <button onClick={modalChangeDay}>날짜 바꾸기</button>
                 <button onClick={modalMemo}>메모</button>
-                <button onClick={modalChangeDay}>날짜바꾸기</button>
+                {memoShow}
             </div>
         </>
 
     return (
-        <div key={'modal'} className={`modal-container ${isShowModal ? 'modalShow' : ''}`}>
+        <div key={'modal'} className={`modal-container ${isShowModal !== -1 ? 'modalShow' : ''}`}>
             {modal}
         </div>
     );

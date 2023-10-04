@@ -45,8 +45,8 @@ export default function Calendar() {
         setTodoModify(-1);
     }
 
-    function turnModal(pn) {
-        setIsShowModal(pn);
+    function turnModal(n) {
+        setIsShowModal(n);
     }
 
     function setMonth(n) {

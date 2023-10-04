@@ -21,11 +21,6 @@ export const changeDayStateAtom = atom({
     default: false,
 });
 
-export const changeDayStateValueAtom = atom({
-    key: 'changeDayStateValue',
-    default: 0,
-});
-
 export const todoMemoAtom = atom({
     key: 'todoMemo',
     default: false,
@@ -38,7 +33,7 @@ export const todoMemoValueAtom = atom({
 
 export const isShowModalAtom = atom({
     key: 'isShowModal',
-    default: false,
+    default: -1,
 });
 
 export const todoModifyNthAtom = atom({
