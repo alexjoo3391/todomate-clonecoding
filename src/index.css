@@ -188,3 +188,12 @@ input[type=text] {
 .memoShow::-webkit-scrollbar {
     display: none;
 }
+
+.diary {
+    color: transparent;
+    text-shadow: 0 0 0 #999999;
+}
+
+.diaryToday {
+    text-shadow: 0 0 0 dodgerblue !important;
+}
