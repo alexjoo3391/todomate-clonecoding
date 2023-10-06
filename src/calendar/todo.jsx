@@ -83,7 +83,7 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
                 let todoMemo = '';
 
                 if(newTodoMemoCheck[n - 1][i] !== 0) {
-                    todoMemo = <p>메모</p>;
+                    todoMemo = <p><i className="fa-solid fa-square-minus"></i>메모</p>;
                     setTodoMemoValue(newTodoMemo[n - 1]);
                 }
 
@@ -235,8 +235,10 @@ function Todos({showInput, getTodoExtend}) {
     return [1, 2, 3].map((n) => {
         return (
             <React.Fragment key={`todo${n}`}>
-                <p>목표 {n} <button onClick={(e) => showInput(e, n - 1)}>+</button></p>
-                {getTodoExtend(n)}
+                <div className='todoList'>
+                    <p><i className="fa-solid fa-box"></i> 목표 {n} <button onClick={(e) => showInput(e, n - 1)}>+</button></p>
+                    {getTodoExtend(n)}
+                </div>
             </React.Fragment>
         )
     });

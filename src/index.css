@@ -1,3 +1,5 @@
+
+
 * {
     padding: 0;
     margin: 0;
@@ -10,25 +12,74 @@ html {
 }
 
 .calendar {
-    margin: 10px;
+    padding: 10px;
 }
 
-.selected {
-    background-color: black !important;
+.selected p{
+    margin: 0 auto;
+    width: 18px;
+    border-radius: 50%;
+    background-color: dodgerblue !important;
     color: white;
 }
 
+.td p {
+    font-size: 13px;
+    line-height: 20px;
+    width: 20px;
+    margin: 0 auto;
+}
+
+.td p:hover {
+    cursor: pointer;
+}
+
+.td div {
+    margin-bottom: 5px;
+    height: 20px;
+}
+
 .dayBox {
-    width: 30px;
+    font-size: 20px;
+    width: 20px;
     height: 30px;
+    margin: 0 auto 5px;
+    border-radius: 5px;
+    line-height: 20px;
+}
+
+.dayBoxTodo {
+    font-size: 15px;
+    background-color: #C9CFD3;
+    color: white;
+    text-shadow: 0 0 1px black;
+}
+
+.dayBox:hover {
+    cursor: pointer;
+}
+
+.dayBoxCheck {
+    background-color: black;
 }
 
 table {
+    width: 100%;
     text-align: center;
 }
 
-.today {
-    background-color: #cccccc;
+tr {
+    justify-content: space-between;
+}
+
+.today p{
+    margin: 0 auto;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
 }
 
 .todoInput1, .todoInput2, .todoInput3 {
@@ -79,39 +130,65 @@ input[type=text] {
 }
 
 .calendar-month {
-    max-width: 226px;
-    border-bottom: 2px solid black;
     margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
 }
 
+.calendar-month > div {
+    display: flex;
+    gap: 5px;
+}
+
 .calendar-month button, .todoCheck button, .todo > p > button, .display button {
-    background-color: black;
+    background-color: white;
     border: none;
-    color: white;
     width: 20px;
     height: 20px;
 }
 
 .calendar-month button:hover, .todoCheck button:hover, .todo > p > button:hover, .display button:hover {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
+    cursor: pointer;
 }
 
-.todo {
-    max-width: 226px;
+thead th {
+    font-size: 10px;
 }
+
 
 .todo > * {
     justify-content: space-between;
 }
 
-.todo > p {
-    border-bottom: 2px solid black;
+.todoList > p {
+    display: inline-flex;
+    background-color: #EFEFEF;
     margin-bottom: 10px;
     margin-top: 20px;
+    padding: 7px;
+    border-radius: 50px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.todoList > p > i {
+    line-height: 20px;
+    margin-right: 5px;
+    color: #BEC2C6;
+}
+
+.todoList button {
+
+    margin-left: 8px;
+    border: none;
+    width: 1.5em;
+    height: 1.5em;
+    background-color: white;
+    border-radius: .75em;
+}
+
+.todoCheck {
+    justify-content: space-between;
 }
 
 .todo-check {
@@ -123,27 +200,20 @@ input[type=text] {
 }
 
 .todo-check label {
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    background-color: white;
-    border: 1px solid black;
-    color: #999999;
+    font-size: 15px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
     text-align: center;
+    line-height: 20px;
+    background-color: #C9CFD3;
+    color: white;
+    margin-right: 10px;
 }
 
 .todo-check input:checked ~ label {
     background-color: black !important;
     color: white !important;
-}
-
-.td {
-    cursor: pointer;
-}
-
-.td:hover p {
-    background-color: black;
-    color: white;
 }
 
 .modalTable {
@@ -166,8 +236,14 @@ input[type=text] {
 .todoMemo p{
     padding-left: 30px;
     font-weight: bold;
+    font-size: 12px;
+    color: black;
+}
+
+.todoMemo p i {
+    color: lightgray;
     font-size: 13px;
-    color: #555555;
+    margin-right: 5px;
 }
 
 .memoMenu {
@@ -196,4 +272,142 @@ input[type=text] {
 
 .diaryToday {
     text-shadow: 0 0 0 dodgerblue !important;
+}
+
+.emojiModalContainer, .diaryModalContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100% - 180px);
+    background-color: #00000066;
+    padding-bottom: 180px;
+}
+
+.emojiModal, .diaryModal {
+    width: 210px;
+    height: 190px;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    background-color: white;
+    padding: 20px;
+}
+
+.utilModalContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100% - 180px);
+    background-color: #00000011;
+    padding-bottom: 180px;
+}
+
+.utilModal {
+    width: 230px;
+    height: 210px;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    padding: 10px;
+}
+
+.radioList {
+    display: flex;
+    justify-content: center;
+}
+
+.radio {
+    display: flex;
+    gap: 5px;
+    padding: 10px;
+    background-color: #EFEFEF;
+    border-radius: 1.5em;
+}
+
+.radio label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.radio input {
+    margin-top: .5em;
+    vertical-align: middle;
+    appearance: none;
+    width: .4em;
+    height: .4em;
+    border: .2em solid white;
+    border-radius: 50%;
+}
+
+.radio input:checked {
+    border-color: #31E94C;
+}
+
+.diaryContainer {
+    padding: 10px;
+}
+
+.diaryContainer > p {
+    margin: 10px 0;
+}
+
+.diaryContainer input[type=button]{
+    border: none;
+    background-color: transparent;
+}
+
+.diaryContainer input[type=button]:hover {
+    cursor: pointer;
+}
+
+.diaryHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.diaryHeader input {
+    font-size: 15px;
+    line-height: 17px;
+}
+
+.diaryContainer textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+    height: 100px;
+}
+
+.diaryEmoji{
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.diaryEmoji input {
+    font-size: 30px;
+}
+
+.emojiNormal {
+    color: transparent;
+    text-shadow: 0 0 0 dodgerblue;
+}
+
+@media (min-width: 700px) {
+    .calendar {
+        display: flex;
+        gap: 50px;
+    }
+
+    .calendarMain {
+        width: 400px;
+    }
+
+
+    .todo {
+        max-width: 226px;
+    }
 }

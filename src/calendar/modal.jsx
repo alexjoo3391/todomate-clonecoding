@@ -139,20 +139,20 @@ export default function ShowModal({currentMonth}) {
 
     }
 
-    const modal = todoChangeDay ?
-        <>
+    const modal = todoChangeDay
+        ? <>
             <div className='modal' >
                 <ShowModalMonth today={today} modalCurrentMonth={modalCurrentMonth} setModalCurrentMonth={setModalMonth}/>
                 <ShowModalDate today={today} tdEventListener={tdEventListener} modalCurrentMonth={modalCurrentMonth}/>
             </div>
-        </> :
-        todoMemo ?
-        <>
+        </>
+        : todoMemo
+        ? <>
             <div className='modal'>
                 <ShowMemo memoConfirm={memoConfirm} memoDelete={memoDelete} memoModalValue={memoModalValue}/>
             </div>
-        </> :
-        <>
+        </>
+        : <>
             <div className='modal' >
                 <button onClick={(e) => modalModify(e)}>수정</button>
                 <button onClick={modalDelete}>삭제</button>

@@ -27,6 +27,8 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
                 + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
                 + (('0' + date.getDate()).slice(-2)).toString();
 
+            let todoCheckCount = 0;
+
             if (i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
                 const todoDate = new Date(today.getFullYear(), today.getMonth() + currentMonth, ((i * 7 + j) - weekDay + 1));
                 const todoDateString = todoDate.getFullYear().toString() + (('0' + (todoDate.getMonth() + 1)).slice(-2)).toString() + (('0' + todoDate.getDate()).slice(-2)).toString();
@@ -39,6 +41,7 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
                         isExist = true;
                         const todoDay = JSON.parse(todoItems[`todoCheck${i}${todoDateString}`]);
                         for (let j = 0; j < todoDay.length; j++) {
+                            todoCheckCount++;
                             if (todoDay[j] === 0) {
                                 todoCount++;
                             }
@@ -59,11 +62,19 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
                 emoji = JSON.parse(sessionStorage.getItem(`diary${dayString}`))[0];
             }
 
+            let isDayInMonth = '';
+            if(i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
+                isDayInMonth = (
+                    <>
+                        {todoRadio ? <div className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${todoRadio ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</div> : <div className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</div>}
+                        <div className={classes}><p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p></div>
+                    </>
+                );
+            }
+
             week.push(
-                <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`}
-                    onClick={(e) => tdEventListener(e)}>
-                    <p className={classes}>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
-                    {todoRadio ? <div className='dayBox' id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</div> : <div className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</div>}
+                <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => tdEventListener(e)}>
+                    {isDayInMonth}
                 </td>
             );
         }
