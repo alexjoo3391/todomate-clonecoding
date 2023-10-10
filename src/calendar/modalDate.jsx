@@ -1,7 +1,6 @@
-import {useRecoilState} from 'recoil'
 
 // 달력 표시
-export default function ShowModalDate({today, tdEventListener, todoItems = [], modalCurrentMonth}) {
+export default function ModalDate({today, tdEventListener, todoItems = [], modalCurrentMonth}) {
 
     const firstDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, 1);
     const lastDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth + 1, 0);

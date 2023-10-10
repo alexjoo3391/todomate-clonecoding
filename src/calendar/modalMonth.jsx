@@ -1,5 +1,5 @@
 
-export default function ShowModalMonth({today, modalCurrentMonth, setModalCurrentMonth}) {
+export default function ModalMonth({today, modalCurrentMonth, setModalCurrentMonth}) {
     const monthFromToday = (today.getMonth() + modalCurrentMonth) % 12 + 1;
 
     function monthOnClick(pn) {

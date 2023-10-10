@@ -5,30 +5,30 @@ import {useRecoilState, useSetRecoilState} from 'recoil'
 import {
     deleteStateAtom,
     modifyStateAtom,
-    todoModifyInputDisplayAtom,
-    todoModifyNthAtom,
+    modifyingTodoInputDisplayAtom,
+    modifyingTodoIndexAtom,
     changeDayStateAtom,
     todoMemoAtom,
     todoMemoValueAtom,
-} from './atoms';
+} from './atoms.js';
 
 // 목표 리스트 표시
-export default function ShowTodo({today, reloadTodoItems, turnModal, currentMonth, selectDay}) {
+export default function ShowTodo({today, reloadTodoItems, toggleModal, currentMonth, selectedDay}) {
 
-    const selectDate = new Date(today.getFullYear(), today.getMonth() + currentMonth, selectDay);
-    const dayString = selectDate.getFullYear().toString()
-        + (('0' + (selectDate.getMonth() + 1)).slice(-2)).toString()
-        + (('0' + selectDate.getDate()).slice(-2)).toString();
+    const selectedDate = new Date(today.getFullYear(), today.getMonth() + currentMonth, selectedDay);
+    const dayString = selectedDate.getFullYear().toString()
+        + (('0' + (selectedDate.getMonth() + 1)).slice(-2)).toString()
+        + (('0' + selectedDate.getDate()).slice(-2)).toString();
 
     const [inputDisplay, setInputDisplay] = useState([false, false, false]);
 
-    const [todoModify, setTodoModify] = useRecoilState(modifyStateAtom);
-    const [todoDelete, setTodoDelete] = useRecoilState(deleteStateAtom);
+    const [modifyingTodo, setModifyingTodo] = useRecoilState(modifyStateAtom);
+    const [deletingTodo, setDeletingTodo] = useRecoilState(deleteStateAtom);
 
-    const [todoModifyInputDisplay, setTodoModifyInputDisplay] = useRecoilState(todoModifyInputDisplayAtom);
+    const [modifyingTodoInputDisplay, setModifyingTodoInputDisplay] = useRecoilState(modifyingTodoInputDisplayAtom);
 
-    const setTodoModifyNth = useSetRecoilState(todoModifyNthAtom);
-    const [todoDeleteNth, setTodoDeleteNth] = useState(0);
+    const setModifyingTodoIndex = useSetRecoilState(modifyingTodoIndexAtom);
+    const [deletingTodoIndex, setDeletingTodoIndex] = useState(0);
     const setTodoChangeDay = useSetRecoilState(changeDayStateAtom);
 
     const setTodoMemo = useSetRecoilState(todoMemoAtom);
@@ -64,20 +64,20 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
             for (let i = 0; i < arr.length; i++) {
 
                 let modifyInput = '';
-                let selectTodoModifyInput = n === 1 ? todoModifyInputDisplay[0] : n === 2 ? todoModifyInputDisplay[1] : todoModifyInputDisplay[2];
-                if (todoModify === i && selectTodoModifyInput) {
-                    todoModifyInput()
-                    modifyInput = <input className='todoModifyInput' type='text' defaultValue={arr[i]}
+                let selectModifyingTodoInput = n === 1 ? modifyingTodoInputDisplay[0] : n === 2 ? modifyingTodoInputDisplay[1] : modifyingTodoInputDisplay[2];
+                if (modifyingTodo === i && selectModifyingTodoInput) {
+                    modifyingTodoInput()
+                    modifyInput = <input className='modifyingTodoInput' type='text' defaultValue={arr[i]}
                                          onClick={(e) => e.stopPropagation()}
-                                         onKeyUp={(e) => enterCheck(e, () => todoModifyConfirm(n, i))}/>;
+                                         onKeyUp={(e) => enterCheck(e, () => modifyingTodoConfirm(n, i))}/>;
                 }
 
                 const todoContent = modifyInput
                     ? modifyInput
                     : <p key={`todoArr${n}${i}`}>{arr[i]}</p>
 
-                const todoModifyButton = modifyInput
-                    ? <button onClick={() => todoModifyConfirm(n, i)}>+</button>
+                const modifyingTodoButton = modifyInput
+                    ? <button onClick={() => modifyingTodoConfirm(n, i)}>+</button>
                     : <button key={`todoButton${n}${i}`} onClick={() => todoSetting(n, i)}>...</button>;
 
                 let todoMemo = '';
@@ -97,7 +97,7 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
                                 <label htmlFor={`check${n}${i}`}>✓</label>
                                 {todoContent}
                             </div>
-                            {todoModifyButton}
+                            {modifyingTodoButton}
                         </div>
                         <div className={'todoMemo'}>
                             {todoMemo}
@@ -148,12 +148,12 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
     }
 
     function todoSetting(n, i) {
-        setTodoModifyNth(n);
-        setTodoDeleteNth(n);
-        turnModal(i);
+        setModifyingTodoIndex(n);
+        setDeletingTodoIndex(n);
+        toggleModal(i);
         const newVal = -2 - i;
-        setTodoModify(newVal);
-        setTodoDelete(newVal);
+        setModifyingTodo(newVal);
+        setDeletingTodo(newVal);
 
         let isModalClick = false;
 
@@ -162,7 +162,7 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
         });
         document.querySelector('.modal-container').addEventListener('click', () => {
             if(!isModalClick) {
-                turnModal(-1);
+                toggleModal(-1);
                 setTodoMemo(false);
                 setTodoChangeDay(false);
             }else {
@@ -180,20 +180,20 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
         reloadTodoItems();
     }
 
-    function todoModifyConfirm(n, i) {
-        const val = document.querySelector('.todoModifyInput').value;
+    function modifyingTodoConfirm(n, i) {
+        const val = document.querySelector('.modifyingTodoInput').value;
         const sessionVal= JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
         sessionStorage.setItem(`todo${n}${dayString}`, JSON.stringify(sessionVal.slice(0, i).concat(val, sessionVal.slice(i + 1))));
         reloadTodoItems();
     }
 
-    function todoModifyInput() {
+    function modifyingTodoInput() {
         document.addEventListener('click', () => {
-            setTodoModifyInputDisplay([false, false, false]);
+            setModifyingTodoInputDisplay([false, false, false]);
         })
     }
 
-    function todoDeleteConfirm(n, i) {
+    function deletingTodoConfirm(n, i) {
         const sessionVal = JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
         const sessionCheckVal = JSON.parse(sessionStorage.getItem(`todoCheck${n}${dayString}`));
         const sessionMemoVal = JSON.parse(sessionStorage.getItem(`todoMemo${n}${dayString}`));
@@ -220,10 +220,10 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
     }
 
     useEffect(() => {
-        if (todoDelete > -1) {
-            todoDeleteConfirm(todoDeleteNth, todoDelete);
+        if (deletingTodo > -1) {
+            deletingTodoConfirm(deletingTodoIndex, deletingTodo);
         }
-    }, [todoDelete]);
+    }, [deletingTodo]);
 
     return (
         <div key={'todoContainer'} className='todo'>
@@ -236,7 +236,7 @@ function Todos({showInput, getTodoExtend}) {
     return [1, 2, 3].map((n) => {
         return (
             <React.Fragment key={`todo${n}`}>
-                <div className='todoList'>
+                <div className='todoList' key={`todoList${n}`}>
                     <p><i className="fa-solid fa-box"></i> 목표 {n} <button onClick={(e) => showInput(e, n - 1)}>+</button></p>
                     {getTodoExtend(n)}
                 </div>

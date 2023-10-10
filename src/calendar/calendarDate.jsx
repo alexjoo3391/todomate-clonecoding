@@ -1,7 +1,7 @@
 import {useRecoilState} from 'recoil'
 
 // 달력 표시
-export default function ShowDate({today, tdEventListener, todoItems = {}, currentMonth, selectDay, todoRadio}) {
+export default function CalendarDate({today, tdEventListener, todoItems = {}, currentMonth, selectedDay, calendarMode}) {
 
     let todoCount;
     let isExist = false;
@@ -20,7 +20,7 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
             let emoji = '🫥';
             isExist = false;
             diaryDay = false;
-            const classes = `${selectDay && selectDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && currentMonth === today.getMonth() - today.getMonth() ? 'today' : ''}`
+            const classes = `${selectedDay && selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && currentMonth === today.getMonth() - today.getMonth() ? 'today' : ''}`
 
             const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, i * 7 + j - weekDay + 1);
             const dayString = date.getFullYear().toString()
@@ -66,7 +66,7 @@ export default function ShowDate({today, tdEventListener, todoItems = {}, curren
             if(i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
                 isDayInMonth = (
                     <>
-                        {todoRadio ? <div className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${todoRadio ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</div> : <div className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</div>}
+                        {calendarMode === 'todo' ? <div className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</div> : <div className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</div>}
                         <div className={classes}><p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p></div>
                     </>
                 );

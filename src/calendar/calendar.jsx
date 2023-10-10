@@ -1,47 +1,47 @@
-import ShowDate from "./date";
-import ShowMonth from "./month";
-import ShowTodo from "./todo";
-import ShowModal from "./modal";
+import CalendarDate from "./calendarDate.jsx";
+import CalendarMonth from "./calendarMonth.jsx";
+import Diary from "./diary.jsx";
+import Todo from "./todo";
 
-import {useEffect, useRef, useState} from 'react'
+import Modal from "./modal";
 
-import { deleteStateAtom, isShowModalAtom, modifyStateAtom} from "./atoms";
+import {useState} from 'react'
 
+import {deleteStateAtom, isModalOpenAtom, modifyStateAtom} from "./atoms.js";
 import {useRecoilState} from 'recoil'
-import ShowDiary from "./diary.jsx";
 
 export default function Calendar() {
 
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(0);
-    const [selectDay, setSelectDay] = useState(today.getDate());
+    const [selectedDay, setSelectedDay] = useState(today.getDate());
     const [todoItems, setTodoItems] = useState({...sessionStorage});
-    const [isShowModal, setIsShowModal] = useRecoilState(isShowModalAtom);
+    const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
 
-    const [todoDelete, setTodoDelete] = useRecoilState(deleteStateAtom);
-    const [todoModify, setTodoModify] = useRecoilState(modifyStateAtom);
+    const [deletingTodo, setDeletingTodo] = useRecoilState(deleteStateAtom);
+    const [modifyingTodo, setModifyingTodo] = useRecoilState(modifyStateAtom);
 
-    const [diaryModal, setDiaryModal] = useState(false);
-    const [todoRadio, setTodoRadio] = useState(true);
-    const [todoDiary, setTodoDiary] = useState(0);
+    const [diaryModalOpen, setDiaryModalOpen] = useState(false);
+    const [calendarMode, setCalendarMode] = useState("todo"); // todo or diary
+    const [editingDiary, setEditingDiary] = useState(0);
 
     const [utilModalShow, setUtilModalShow] = useState(false);
 
     function tdEventListener(e) {
-        if(todoRadio) {
+        if(calendarMode === 'todo') {
             const day = e.target.innerText;
             if (day !== '' || e.target.nodeName === 'DIV') {
                 const selected = document.querySelector('.selected');
 
                 if (day !== '' && e.target.nodeName === 'P') {
-                    setSelectDay(day);
+                    setSelectedDay(day);
                     if (selected) {
                         selected.classList.remove('selected');
                     }
                     e.target.parentNode.classList.add('selected')
                 } else if(e.target.id !== '') {
                     let newDay = document.querySelector(`.td${e.target.id} p`);
-                    setSelectDay(newDay.innerText);
+                    setSelectedDay(newDay.innerText);
                     if (selected) {
                         selected.classList.remove('selected');
                     }
@@ -49,66 +49,56 @@ export default function Calendar() {
                 }
             }
         } else {
-            let day = e.target.innerText;
-            if (day === '' || e.target.nodeName !== 'P') {
-                if(day !== '🫥') {
-                    setDiaryModal(true);
+            if(e.target.id !== '') {
+                let day = e.target.innerText;
+                if (day === '' || e.target.nodeName !== 'P') {
+                    if(day !== '🫥') {
+                        setDiaryModalOpen(true);
+                    }
+                    day = e.target.id;
+                } else if(document.getElementById(e.target.innerText).innerText !== '🫥') {
+                    setDiaryModalOpen(true);
                 }
-                day = e.target.id;
-            } else if(document.getElementById(e.target.innerText).innerText !== '🫥') {
-                setDiaryModal(true);
-            }
 
-            if(parseInt(day) > today.getDate()) {
-                setDiaryModal(false );
-                alert('미래의 일기는 작성할 수 없습니다');
-            } else {
-                setTodoDiary(day);
+                if(parseInt(day) > today.getDate()) {
+                    setDiaryModalOpen(false );
+                    alert('미래의 일기는 작성할 수 없습니다');
+                } else {
+                    setEditingDiary(day);
+                }
             }
         }
     }
 
     function reloadTodoItems() {
         setTodoItems({...sessionStorage});
-        setTodoDelete(-1);
-        setTodoModify(-1);
+        setDeletingTodo(-1);
+        setModifyingTodo(-1);
     }
 
-    function turnModal(n) {
-        setIsShowModal(n);
-    }
-
-    function setMonth(n) {
-        setCurrentMonth(n);
-    }
-
-    function setDay(n) {
-        setSelectDay(n);
-    }
-
-    function todoRadioCheck(e) {
+    function todoModeCheck(e) {
         if(e.target.value === 'on') {
-            setTodoRadio(true);
+            setCalendarMode("todo");
         }
     }
 
-    function diaryRadioCheck(e) {
+    function diaryModeCheck(e) {
         if(e.target.value === 'on') {
-            setTodoRadio(false);
+            setCalendarMode("diary");
         }
     }
 
-    function diaryCancel() {
+    function cancelDiary() {
         if(utilModalShow) {
             setUtilModalShow(false);
         } else {
-            setDiaryModal(false);
-            setTodoDiary(0);
+            setDiaryModalOpen(false);
+            setEditingDiary(0);
         }
     }
 
-    function diaryConfirm(val, emoji) {
-        const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, todoDiary);
+    function confirmDiary(val, emoji) {
+        const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, editingDiary);
         const dayString = date.getFullYear().toString()
             + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
             + (('0' + date.getDate()).slice(-2)).toString();
@@ -116,7 +106,7 @@ export default function Calendar() {
         if (val !== '' && emoji !== '🫥') {
             sessionStorage.setItem(`diary${dayString}`, JSON.stringify([emoji, val]));
             setUtilModalShow(false);
-            setTodoDiary(0);
+            setEditingDiary(0);
         } else if (emoji === '🫥') {
             alert('이모지를 입력해 주세요');
         } else if (val === '') {
@@ -124,48 +114,44 @@ export default function Calendar() {
         }
     }
 
-    function getDiary(isModal) {
-        return <ShowDiary  day={todoDiary} currentMonth={currentMonth} diaryCancel={diaryCancel} diaryConfirm={diaryConfirm} diaryRemove={diaryRemove} isModal={isModal} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModal={setDiaryModal}/>;
-    }
-
-    const diaryModalPage = (
-        <div className='diaryModalContainer' onClick={diaryCancel}>
-            <div className='diaryModal' onClick={(e) => e.stopPropagation()}>
-                {getDiary(true)}
+    const diaryModalOpenPage = (
+        <div className='diaryModalOpenContainer' onClick={cancelDiary}>
+            <div className='diaryModalOpen' onClick={(e) => e.stopPropagation()}>
+                <Diary  day={editingDiary} currentMonth={currentMonth} cancelDiary={cancelDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
             </div>
         </div>
     )
 
-    function diaryRemove() {
-        const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, todoDiary);
+    function removeDiary() {
+        const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, editingDiary);
         const dayString = date.getFullYear().toString()
             + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
             + (('0' + date.getDate()).slice(-2)).toString();
 
         sessionStorage.removeItem(`diary${dayString}`);
-        setDiaryModal(false);
-        setTodoDiary(0);
+        setDiaryModalOpen(false);
+        setEditingDiary(0);
     }
 
-    return todoDiary !== 0 && !diaryModal
+    return editingDiary !== 0 && !diaryModalOpen
         ? <div>
-            {getDiary(false)}
+            <Diary  day={editingDiary} currentMonth={currentMonth} cancelDiary={cancelDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
         </div>
         : <div className='calendar'>
             <div className='calendarMain'>
-                <ShowMonth today={today} currentMonth={currentMonth} setCurrentMonth={setMonth} setSelectDay={setDay}/>
-                <ShowDate today={today} tdEventListener={tdEventListener} todoItems={todoItems} currentMonth={currentMonth} selectDay={selectDay} todoRadio={todoRadio} day={todoDiary}/>
+                <CalendarMonth today={today} currentMonth={currentMonth} setCurrentMonth={(n) => setCurrentMonth(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
+                <CalendarDate today={today} tdEventListener={tdEventListener} todoItems={todoItems} currentMonth={currentMonth} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
                 <div className='radioList'>
                     <div className='radio'>
-                        <input type='radio' name='todoRadio' id='todoRadio' onChange={(e) => todoRadioCheck(e)} checked={todoRadio}/><label htmlFor='todoRadio'>할 일</label>
-                        <input type='radio' name='todoRadio' id='diaryRadio' onChange={(e) => diaryRadioCheck(e)} checked={!todoRadio}/><label htmlFor='diaryRadio'>일기</label>
+                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === 'todo'}/><label htmlFor='todoRadio'>할 일</label>
+                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => diaryModeCheck(e)} checked={calendarMode === 'diary'}/><label htmlFor='diaryRadio'>일기</label>
                     </div>
                 </div>
             </div>
             <div className='calendarTodo'>
-                <ShowTodo today={today} reloadTodoItems={reloadTodoItems} turnModal={turnModal} currentMonth={currentMonth} selectDay={selectDay}/>
+                <Todo today={today} reloadTodoItems={reloadTodoItems} toggleModal={(n) => setIsModalOpen(n)} currentMonth={currentMonth} selectedDay={selectedDay}/>
             </div>
-            <ShowModal currentMonth={currentMonth}/>
-            {diaryModal ? diaryModalPage : ''}
+            <Modal currentMonth={currentMonth} editingDiary={editingDiary}/>
+            {diaryModalOpen ? diaryModalOpenPage : ''}
         </div>
 }

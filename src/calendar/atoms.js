@@ -11,7 +11,7 @@ export const modifyStateAtom = atom({
     default: -1,
 });
 
-export const todoModifyInputDisplayAtom = atom({
+export const modifyingTodoInputDisplayAtom = atom({
     key: 'todoModifyInputDisplay',
     default: [false, false, false],
 });
@@ -31,13 +31,13 @@ export const todoMemoValueAtom = atom({
     default: '',
 });
 
-export const isShowModalAtom = atom({
-    key: 'isShowModal',
+export const isModalOpenAtom = atom({
+    key: 'isModalOpen',
     default: -1,
 });
 
-export const todoModifyNthAtom = atom({
-    key: 'todoModifyNth',
+export const modifyingTodoIndexAtom = atom({
+    key: 'todoModifyIndex',
     default: 0,
 })
 

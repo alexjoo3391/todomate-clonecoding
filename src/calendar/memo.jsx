@@ -1,4 +1,4 @@
-export default function ShowMemo({memoConfirm, memoDelete, memoModalValue}) {
+export default function Memo({memoConfirm, memoDelete, memoModalValue}) {
 
     return (
         <>

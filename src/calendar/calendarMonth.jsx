@@ -1,7 +1,7 @@
 import {useRecoilState} from 'recoil'
 
 // 상단 년,월 표시
-export default function ShowMonth({today, currentMonth, setCurrentMonth, setSelectDay}) {
+export default function CalendarMonth({today, currentMonth, setCurrentMonth, setSelectedDay}) {
 
     const monthFromToday = (today.getMonth() + currentMonth) % 12 + 1;
 
@@ -23,13 +23,13 @@ export default function ShowMonth({today, currentMonth, setCurrentMonth, setSele
     }
 
     function changeSelectDay(day) {
-        setSelectDay(day);
+        setSelectedDay(day);
     }
 
     return (
         <div key={'month'} className='calendar-month'>
             <p>
-                {(today.getFullYear() + (parseInt(Math.floor((today.getMonth() + currentMonth) / 12))) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
+                {(today.getFullYear() + (Math.floor((today.getMonth() + currentMonth) / 12))) + '년 ' + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
             </p>
             <div>
                 <button className='PrevMonthBtn' onClick={() => monthOnClick(false)}><i className="fa-solid fa-chevron-left"></i></button>
