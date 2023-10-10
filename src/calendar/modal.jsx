@@ -154,10 +154,12 @@ export default function ShowModal({currentMonth}) {
         </>
         : <>
             <div className='modal' >
-                <button onClick={(e) => modalModify(e)}>수정</button>
-                <button onClick={modalDelete}>삭제</button>
-                <button onClick={modalChangeDay}>날짜 바꾸기</button>
-                <button onClick={modalMemo}>메모</button>
+                <div className='modifyDelete'>
+                    <button onClick={(e) => modalModify(e)}><i className="fa-solid fa-pencil"></i><br />수정하기</button>
+                    <button onClick={modalDelete}><i className="fa-solid fa-trash-can"></i><br />삭제하기</button>
+                </div>
+                <button onClick={modalChangeDay}><div><i className="fa-solid fa-arrow-turn-down"></i></div>날짜 바꾸기</button>
+                <button onClick={modalMemo}><div><i className="fa-regular fa-square-minus"></i></div>메모</button>
                 {memoShow}
             </div>
         </>

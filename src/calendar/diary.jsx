@@ -1,7 +1,5 @@
 import {useEffect, useState} from "react";
 
-// todo - css styled component 사용, 코드 개선, 함수 이름(풀 네임, 동사형).
-
 export default function ShowDiary({day, currentMonth, diaryCancel, diaryConfirm, diaryRemove, isModal, utilModalShow, setUtilModalShow, setDiaryModal}) {
 
     const [emojiModalShow, setEmojiModalShow] = useState(false);

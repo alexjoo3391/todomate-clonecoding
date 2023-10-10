@@ -39,7 +39,7 @@ export default function Calendar() {
                         selected.classList.remove('selected');
                     }
                     e.target.parentNode.classList.add('selected')
-                } else {
+                } else if(e.target.id !== '') {
                     let newDay = document.querySelector(`.td${e.target.id} p`);
                     setSelectDay(newDay.innerText);
                     if (selected) {

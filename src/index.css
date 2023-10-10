@@ -11,6 +11,10 @@ html {
     height: 100vh;
 }
 
+#root {
+    width: 100%;
+}
+
 .calendar {
     padding: 10px;
 }
@@ -93,7 +97,6 @@ tr {
 input[type=text] {
     width: calc(100% - 20px);
     margin-top: 1px;
-    background-color: #eeeeee;
     border: none;
     border-bottom: 1px solid black;
 }
@@ -101,6 +104,7 @@ input[type=text] {
 .todoCheck {
     display: flex;
     gap: 5px;
+    margin-top: 10px;
 }
 
 .modal-container {
@@ -115,14 +119,14 @@ input[type=text] {
 }
 
 .modal {
-    width: 210px;
-    height: 190px;
+    width: calc(100% - 40px);
     position: absolute;
     left: 50%;
     bottom: 0;
     transform: translate(-50%, 0);
     background-color: white;
     padding: 20px;
+    border-radius: 20px;
 }
 
 .modalShow {
@@ -193,6 +197,7 @@ thead th {
 
 .todo-check {
     display: flex;
+    width: 100%;
 }
 
 .todo-check input[type=checkbox] {
@@ -216,8 +221,27 @@ thead th {
     color: white !important;
 }
 
+
 .modalTable {
     width: 100%;
+}
+
+.modalTable .selected {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.modalTable p {
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+}
+
+.modalTable td {
+    width: 40px;
+    height: 40px;
 }
 
 .modal {
@@ -226,11 +250,55 @@ thead th {
     justify-content: space-between;
 }
 
+.modifyDelete {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.modifyDelete button {
+    width: calc(50% - 5px);
+    border-radius: 10px;
+    height: 70px;
+}
+
+.modifyDelete button:first-child i {
+    color: dodgerblue;
+}
+
+.modifyDelete button:last-child i {
+    color: crimson;
+}
+
 .modal button {
-    height: 30px;
+    font-size: 14px;
+    margin-bottom: 20px;
     border: none;
-    background: black;
+}
+
+.modal > button {
+    display: flex;
+    text-align: left;
+    line-height: 30px;
+    background-color: transparent;
+}
+
+.modal > button div {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
     color: white;
+    border-radius: 15px;
+    margin-right: 10px;
+}
+
+.modal > button:nth-child(2) div {
+    background-color: slateblue;
+}
+
+.modal > button:nth-child(3) div {
+    background-color: gold;
 }
 
 .todoMemo p{
@@ -249,20 +317,37 @@ thead th {
 .memoMenu {
     width: 100%;
     display: flex;
+    justify-content: space-between;
 }
 
-.memoMenu button {
-    width: 50%;
-}
 
 .memoShow {
     overflow: scroll;
-    padding: 5px;
-    background-color: #cccccc;
+    padding: 10px;
+    background-color: lemonchiffon;
+    border-radius: 10px;
 }
 
 .memoShow::-webkit-scrollbar {
     display: none;
+}
+
+#memo {
+    resize: none;
+    border: none;
+    background-color: lemonchiffon;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.memoMenu button{
+    background-color: transparent;
+    font-size: 16px;
+    display: inline-flex;
+}
+
+.memoMenu button:first-child {
+    color: red;
 }
 
 .diary {
@@ -285,14 +370,14 @@ thead th {
 }
 
 .emojiModal, .diaryModal {
-    width: 210px;
-    height: 190px;
+    width: calc(100% - 40px);
     position: absolute;
     left: 50%;
     bottom: 0;
     transform: translate(-50%, 0);
     background-color: white;
     padding: 20px;
+    min-height: 350px;
 }
 
 .utilModalContainer {
@@ -306,13 +391,31 @@ thead th {
 }
 
 .utilModal {
-    width: 230px;
-    height: 210px;
+    width: calc(100% - 20px);
     position: absolute;
     left: 50%;
     bottom: 0;
     transform: translate(-50%, 0);
     padding: 10px;
+}
+
+.utilModal input:first-child {
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #999999;
+}
+
+.utilModal input:nth-child(2) {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 10px;
+}
+
+.utilModal input {
+    width: 100%;
+    height: 60px;
+    border: none;
+    background-color: #dddddd;
+    color: dodgerblue;
+    border-radius: 10px;
 }
 
 .radioList {
@@ -355,11 +458,6 @@ thead th {
     margin: 10px 0;
 }
 
-.diaryContainer input[type=button]{
-    border: none;
-    background-color: transparent;
-}
-
 .diaryContainer input[type=button]:hover {
     cursor: pointer;
 }
@@ -369,8 +467,18 @@ thead th {
     justify-content: space-between;
 }
 
+.diaryHeader p {
+    font-size: 20px;
+}
+
+.diaryEmoji p {
+    font-size: 40px;
+}
+
 .diaryHeader input {
-    font-size: 15px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
     line-height: 17px;
 }
 
@@ -388,12 +496,18 @@ thead th {
 }
 
 .diaryEmoji input {
-    font-size: 30px;
+    font-size: 40px;
+    background-color: transparent;
+    border: none;
 }
 
 .emojiNormal {
     color: transparent;
     text-shadow: 0 0 0 dodgerblue;
+}
+
+.emojiModal td {
+    font-size: 20px;
 }
 
 @media (min-width: 700px) {
@@ -406,8 +520,13 @@ thead th {
         width: 400px;
     }
 
-
     .todo {
-        max-width: 226px;
+        min-width: 226px;
+    }
+}
+
+@media (min-width: 500px) {
+    .modal, .emojiModal, .diaryModal {
+        width: 460px;
     }
 }

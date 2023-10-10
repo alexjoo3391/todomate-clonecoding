@@ -117,10 +117,10 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
             }
         }
         todoExtend.push(
-            <div key={'todoinput'} className={`todoInput${n} ${selectedInputDisplay ? 'display' : ''}`}
+            <div className={`todoInput${n} ${selectedInputDisplay ? 'display' : ''}`}
                  onClick={(e) => e.stopPropagation()}>
-                <input key={'todoInputText'} type="text" onKeyUp={(e) => enterCheck(e, () => todoInputClick(n))}/>
-                <button key={'todoInputButton'} onClick={() => todoInputClick(n)}>+</button>
+                <input type="text" onKeyUp={(e) => enterCheck(e, () => todoInputClick(n))}/>
+                <button onClick={() => todoInputClick(n)}>+</button>
             </div>
         );
 
@@ -143,6 +143,7 @@ export default function ShowTodo({today, reloadTodoItems, turnModal, currentMont
         sessionStorage.setItem(`todoCheck${n}${dayString}`, newTodoCheck[n - 1] ? JSON.stringify(newTodoCheck[n - 1].concat(0)) : JSON.stringify([0]));
         sessionStorage.setItem(`todoMemo${n}${dayString}`, newTodoMemo[n - 1] ? JSON.stringify(newTodoMemo[n - 1].concat(0)) : JSON.stringify([0]));
         sessionStorage.setItem(`todoMemoCheck${n}${dayString}`, newTodoMemoCheck[n - 1] ? JSON.stringify(newTodoMemoCheck[n - 1].concat(0)) : JSON.stringify([0]));
+        document.querySelector('.display input').value = '';
         reloadTodoItems();
     }
 

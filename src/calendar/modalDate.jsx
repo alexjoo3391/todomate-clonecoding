@@ -8,12 +8,13 @@ export default function ShowModalDate({today, tdEventListener, todoItems = [], m
     const weekDay = (firstDay.getDay() ? firstDay.getDay() : 7);
     const weeks = Math.ceil((weekDay + lastDay.getDate() - 1) / 7);
 
+    const selectDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, parseInt(document.querySelector('.selected').innerText)).getDate();
 
     const days = [];
     for (let i = 0; i < weeks; i++) {
         let week = [];
         for (let j = 1; j <= 7; j++) {
-            const classes = `${(i * 7 + j) - weekDay + 1 === today.getDate() && modalCurrentMonth === today.getMonth() - today.getMonth() ? 'today' : ''}`
+            const classes = `${selectDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''}`
 
             week.push(
                 <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`}
