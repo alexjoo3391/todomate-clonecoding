@@ -1,0 +1,532 @@
+
+
+* {
+    padding: 0;
+    margin: 0;
+    user-select: none;
+}
+
+html {
+    width: 100vw;
+    height: 100vh;
+}
+
+#root {
+    width: 100%;
+}
+
+.calendar {
+    padding: 10px;
+}
+
+.selected p{
+    margin: 0 auto;
+    width: 18px;
+    border-radius: 50%;
+    background-color: dodgerblue !important;
+    color: white;
+}
+
+.td p {
+    font-size: 13px;
+    line-height: 20px;
+    width: 20px;
+    margin: 0 auto;
+}
+
+.td p:hover {
+    cursor: pointer;
+}
+
+.td div {
+    margin-bottom: 5px;
+    height: 20px;
+}
+
+.dayBox {
+    font-size: 20px;
+    width: 20px;
+    height: 30px;
+    margin: 0 auto 5px;
+    border-radius: 5px;
+    line-height: 20px;
+}
+
+.dayBoxTodo {
+    font-size: 15px;
+    background-color: #C9CFD3;
+    color: white;
+    text-shadow: 0 0 1px black;
+}
+
+.dayBox:hover {
+    cursor: pointer;
+}
+
+.dayBoxCheck {
+    background-color: black;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+}
+
+tr {
+    justify-content: space-between;
+}
+
+.today p{
+    margin: 0 auto;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+}
+
+.todoInput1, .todoInput2, .todoInput3 {
+    display: none;
+}
+
+.display {
+    display: flex !important;
+}
+
+input[type=text] {
+    width: calc(100% - 20px);
+    margin-top: 1px;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.todoCheck {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.modal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100% - 180px);
+    background-color: #00000066;
+    display: none;
+    padding-bottom: 180px;
+}
+
+.modal {
+    width: calc(100% - 40px);
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.modalShow {
+    display: block !important;
+}
+
+.calendar-month {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.calendar-month > div {
+    display: flex;
+    gap: 5px;
+}
+
+.calendar-month button, .todoCheck button, .todo > p > button, .display button {
+    background-color: white;
+    border: none;
+    width: 20px;
+    height: 20px;
+}
+
+.calendar-month button:hover, .todoCheck button:hover, .todo > p > button:hover, .display button:hover {
+    cursor: pointer;
+}
+
+thead th {
+    font-size: 10px;
+}
+
+
+.todo > * {
+    justify-content: space-between;
+}
+
+.todoList > p {
+    display: inline-flex;
+    background-color: #EFEFEF;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    padding: 7px;
+    border-radius: 50px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.todoList > p > i {
+    line-height: 20px;
+    margin-right: 5px;
+    color: #BEC2C6;
+}
+
+.todoList button {
+
+    margin-left: 8px;
+    border: none;
+    width: 1.5em;
+    height: 1.5em;
+    background-color: white;
+    border-radius: .75em;
+}
+
+.todoCheck {
+    justify-content: space-between;
+}
+
+.todo-check {
+    display: flex;
+    width: 100%;
+}
+
+.todo-check input[type=checkbox] {
+    display: none;
+}
+
+.todo-check label {
+    font-size: 15px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 20px;
+    background-color: #C9CFD3;
+    color: white;
+    margin-right: 10px;
+}
+
+.todo-check input:checked ~ label {
+    background-color: black !important;
+    color: white !important;
+}
+
+
+.modalTable {
+    width: 100%;
+}
+
+.modalTable .selected {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.modalTable p {
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+}
+
+.modalTable td {
+    width: 40px;
+    height: 40px;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.modifyDelete {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.modifyDelete button {
+    width: calc(50% - 5px);
+    border-radius: 10px;
+    height: 70px;
+}
+
+.modifyDelete button:first-child i {
+    color: dodgerblue;
+}
+
+.modifyDelete button:last-child i {
+    color: crimson;
+}
+
+.modal button {
+    font-size: 14px;
+    margin-bottom: 20px;
+    border: none;
+}
+
+.modal > button {
+    display: flex;
+    text-align: left;
+    line-height: 30px;
+    background-color: transparent;
+}
+
+.modal > button div {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    border-radius: 15px;
+    margin-right: 10px;
+}
+
+.modal > button:nth-child(2) div {
+    background-color: slateblue;
+}
+
+.modal > button:nth-child(3) div {
+    background-color: gold;
+}
+
+.todoMemo p{
+    padding-left: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    color: black;
+}
+
+.todoMemo p i {
+    color: lightgray;
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.memoMenu {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.memoShow {
+    overflow: scroll;
+    padding: 10px;
+    background-color: lemonchiffon;
+    border-radius: 10px;
+}
+
+.memoShow::-webkit-scrollbar {
+    display: none;
+}
+
+#memo {
+    resize: none;
+    border: none;
+    background-color: lemonchiffon;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.memoMenu button{
+    background-color: transparent;
+    font-size: 16px;
+    display: inline-flex;
+}
+
+.memoMenu button:first-child {
+    color: red;
+}
+
+.diary {
+    color: transparent;
+    text-shadow: 0 0 0 #999999;
+}
+
+.diaryToday {
+    text-shadow: 0 0 0 dodgerblue !important;
+}
+
+.emojiModalContainer, .diaryModalContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100% - 180px);
+    background-color: #00000066;
+    padding-bottom: 180px;
+}
+
+.emojiModal, .diaryModal {
+    width: calc(100% - 40px);
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    background-color: white;
+    padding: 20px;
+    min-height: 350px;
+}
+
+.utilModalContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100% - 180px);
+    background-color: #00000011;
+    padding-bottom: 180px;
+}
+
+.utilModal {
+    width: calc(100% - 20px);
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    padding: 10px;
+}
+
+.utilModal input:first-child {
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #999999;
+}
+
+.utilModal input:nth-child(2) {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 10px;
+}
+
+.utilModal input {
+    width: 100%;
+    height: 60px;
+    border: none;
+    background-color: #dddddd;
+    color: dodgerblue;
+    border-radius: 10px;
+}
+
+.radioList {
+    display: flex;
+    justify-content: center;
+}
+
+.radio {
+    display: flex;
+    gap: 5px;
+    padding: 10px;
+    background-color: #EFEFEF;
+    border-radius: 1.5em;
+}
+
+.radio label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.radio input {
+    margin-top: .5em;
+    vertical-align: middle;
+    appearance: none;
+    width: .4em;
+    height: .4em;
+    border: .2em solid white;
+    border-radius: 50%;
+}
+
+.radio input:checked {
+    border-color: #31E94C;
+}
+
+.diaryContainer {
+    padding: 10px;
+}
+
+.diaryContainer > p {
+    margin: 10px 0;
+}
+
+.diaryContainer input[type=button]:hover {
+    cursor: pointer;
+}
+
+.diaryHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.diaryHeader p {
+    font-size: 20px;
+}
+
+.diaryEmoji p {
+    font-size: 40px;
+}
+
+.diaryHeader input {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    line-height: 17px;
+}
+
+.diaryContainer textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+    height: 100px;
+}
+
+.diaryEmoji{
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.diaryEmoji input {
+    font-size: 40px;
+    background-color: transparent;
+    border: none;
+}
+
+.emojiNormal {
+    color: transparent;
+    text-shadow: 0 0 0 dodgerblue;
+}
+
+.emojiModal td {
+    font-size: 20px;
+}
+
+@media (min-width: 700px) {
+    .calendar {
+        display: flex;
+        gap: 50px;
+    }
+
+    .calendarMain {
+        width: 400px;
+    }
+
+    .todo {
+        min-width: 226px;
+    }
+}
+
+@media (min-width: 500px) {
+    .modal, .emojiModal, .diaryModal {
+        width: 460px;
+    }
+}
