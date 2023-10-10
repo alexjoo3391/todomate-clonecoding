@@ -9,6 +9,7 @@ import {useState} from 'react'
 
 import {deleteStateAtom, isModalOpenAtom, modifyStateAtom} from "./atoms.js";
 import {useRecoilState} from 'recoil'
+import {CalendarMain, CalendarTodo, ModalContainer, Radio, RadioList} from "../styles/style.js";
 
 export default function Calendar() {
 
@@ -134,24 +135,25 @@ export default function Calendar() {
     }
 
     return editingDiary !== 0 && !diaryModalOpen
-        ? <div>
+        ? <>
             <Diary  day={editingDiary} currentMonth={currentMonth} cancelDiary={cancelDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
-        </div>
-        : <div className='calendar'>
-            <div className='calendarMain'>
+        </>
+        : <>
+            <CalendarMain>
                 <CalendarMonth today={today} currentMonth={currentMonth} setCurrentMonth={(n) => setCurrentMonth(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
                 <CalendarDate today={today} tdEventListener={tdEventListener} todoItems={todoItems} currentMonth={currentMonth} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
-                <div className='radioList'>
-                    <div className='radio'>
+                <RadioList>
+                    <Radio>
                         <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === 'todo'}/><label htmlFor='todoRadio'>할 일</label>
                         <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => diaryModeCheck(e)} checked={calendarMode === 'diary'}/><label htmlFor='diaryRadio'>일기</label>
-                    </div>
-                </div>
-            </div>
-            <div className='calendarTodo'>
+                    </Radio>
+                </RadioList>
+            </CalendarMain>
+            <CalendarTodo>
                 <Todo today={today} reloadTodoItems={reloadTodoItems} toggleModal={(n) => setIsModalOpen(n)} currentMonth={currentMonth} selectedDay={selectedDay}/>
-            </div>
-            <Modal currentMonth={currentMonth} editingDiary={editingDiary}/>
+            </CalendarTodo>
+            <Modal currentMonth={currentMonth} selectedDay={selectedDay}/>
             {diaryModalOpen ? diaryModalOpenPage : ''}
-        </div>
+        </>
 }
+

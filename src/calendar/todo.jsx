@@ -11,9 +11,10 @@ import {
     todoMemoAtom,
     todoMemoValueAtom,
 } from './atoms.js';
+import {StyledTodo, TodoCheck, TodoCheckBox, TodoList, TodoMemo} from "../styles/style.js";
 
 // 목표 리스트 표시
-export default function ShowTodo({today, reloadTodoItems, toggleModal, currentMonth, selectedDay}) {
+export default function Todo({today, reloadTodoItems, toggleModal, currentMonth, selectedDay}) {
 
     const selectedDate = new Date(today.getFullYear(), today.getMonth() + currentMonth, selectedDay);
     const dayString = selectedDate.getFullYear().toString()
@@ -89,19 +90,19 @@ export default function ShowTodo({today, reloadTodoItems, toggleModal, currentMo
 
                 const todoList = (
                     <React.Fragment key={`todoBox${n}${i}`}>
-                        <div className='todoCheck'>
-                            <div className='todo-check'>
+                        <TodoCheck>
+                            <TodoCheckBox>
                                 <input  type="checkbox" id={`check${n}${i}`}
-                                       onChange={() => todoChecked(n, i)}
+                                       onChange={() => checkTodo(n, i)}
                                        checked={newTodoCheck[n - 1][i] === 1}/>
                                 <label htmlFor={`check${n}${i}`}>✓</label>
                                 {todoContent}
-                            </div>
+                            </TodoCheckBox>
                             {modifyingTodoButton}
-                        </div>
-                        <div className={'todoMemo'}>
+                        </TodoCheck>
+                        <TodoMemo>
                             {todoMemo}
-                        </div>
+                        </TodoMemo>
                     </React.Fragment>
                 )
                 todoExtend.push(todoList)
@@ -172,7 +173,7 @@ export default function ShowTodo({today, reloadTodoItems, toggleModal, currentMo
         });
     }
 
-    function todoChecked(n, i) {
+    function checkTodo(n, i) {
         const todoChecked = newTodoCheck[n - 1].slice();
         let rest = todoChecked[i];
         rest = parseInt(rest) * -1 + 1;
@@ -226,9 +227,9 @@ export default function ShowTodo({today, reloadTodoItems, toggleModal, currentMo
     }, [deletingTodo]);
 
     return (
-        <div key={'todoContainer'} className='todo'>
+        <StyledTodo key={'todoContainer'} className='todo'>
             <Todos showInput={showInput} getTodoExtend={getTodoExtend} />
-        </div>
+        </StyledTodo>
     )
 }
 
@@ -236,10 +237,10 @@ function Todos({showInput, getTodoExtend}) {
     return [1, 2, 3].map((n) => {
         return (
             <React.Fragment key={`todo${n}`}>
-                <div className='todoList' key={`todoList${n}`}>
+                <TodoList className='todoList' key={`todoList${n}`}>
                     <p><i className="fa-solid fa-box"></i> 목표 {n} <button onClick={(e) => showInput(e, n - 1)}>+</button></p>
                     {getTodoExtend(n)}
-                </div>
+                </TodoList>
             </React.Fragment>
         )
     });

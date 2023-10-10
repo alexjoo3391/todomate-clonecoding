@@ -1,5 +1,7 @@
 
 // 달력 표시
+import {Table} from "../styles/style.js";
+
 export default function ModalDate({today, tdEventListener, todoItems = [], modalCurrentMonth}) {
 
     const firstDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, 1);
@@ -27,7 +29,7 @@ export default function ModalDate({today, tdEventListener, todoItems = [], modal
     }
 
     return (
-        <table key={'date'} className={'modalTable'}>
+        <Table key={'date'} className={'modalTable'}>
             <thead>
             <tr key={'trh'}>
                 <th key={'h0'}>월</th>
@@ -42,6 +44,6 @@ export default function ModalDate({today, tdEventListener, todoItems = [], modal
             <tbody>
             {days}
             </tbody>
-        </table>
+        </Table>
     )
 }

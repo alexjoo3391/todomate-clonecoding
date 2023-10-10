@@ -1,4 +1,5 @@
 import {useRecoilState} from 'recoil'
+import {DayBox, SelectedDay, Table, Td} from "../styles/style.js";
 
 // 달력 표시
 export default function CalendarDate({today, tdEventListener, todoItems = {}, currentMonth, selectedDay, calendarMode}) {
@@ -66,23 +67,23 @@ export default function CalendarDate({today, tdEventListener, todoItems = {}, cu
             if(i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
                 isDayInMonth = (
                     <>
-                        {calendarMode === 'todo' ? <div className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</div> : <div className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</div>}
-                        <div className={classes}><p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p></div>
+                        {calendarMode === 'todo' ? <DayBox className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</DayBox> : <DayBox className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</DayBox>}
+                        <SelectedDay className={classes}><p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p></SelectedDay>
                     </>
                 );
             }
 
             week.push(
-                <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => tdEventListener(e)}>
+                <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => tdEventListener(e)}>
                     {isDayInMonth}
-                </td>
+                </Td>
             );
         }
         days.push(<tr key={`tr${i}`}>{week}</tr>);
     }
 
     return (
-        <table key={'date'}>
+        <Table key={'date'}>
             <thead>
             <tr key={'trh'}>
                 <th key={'h0'}>월</th>
@@ -97,6 +98,6 @@ export default function CalendarDate({today, tdEventListener, todoItems = {}, cu
             <tbody>
             {days}
             </tbody>
-        </table>
+        </Table>
     )
 }

@@ -15,9 +15,10 @@ import ModalMonth from "./modalMonth.jsx";
 import ModalDate from "./modalDate.jsx";
 import Memo from "./memo.jsx";
 import {useState} from "react";
+import {ModalContainer, ModalMenu, StyledModal} from "../styles/style.js";
 
 // 모달 표시 
-export default function Modal({currentMonth, editingDiary}) {
+export default function Modal({currentMonth, selectedDay}) {
 
     const [modifyingTodo, setModifyingTodo] = useRecoilState(modifyStateAtom);
     const [deletingTodo, setDeletingTodo] = useRecoilState(deleteStateAtom);
@@ -87,7 +88,7 @@ export default function Modal({currentMonth, editingDiary}) {
 
     function memoConfirm() {
         const memoValue = document.querySelector('#memo').value;
-        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, editingDiary);
+        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, selectedDay);
         const selectedDayString = selectedDate.getFullYear().toString()
             + (('0' + (selectedDate.getMonth() + 1)).slice(-2)).toString()
             + (('0' + selectedDate.getDate()).slice(-2)).toString();
@@ -140,34 +141,29 @@ export default function Modal({currentMonth, editingDiary}) {
     }
 
     const modal = todoChangeDay
-        ? <>
-            <div className='modal' >
-                <ModalMonth today={today} modalCurrentMonth={modalCurrentMonth} setModalCurrentMonth={setModalMonth}/>
-                <ModalDate today={today} tdEventListener={tdEventListener} modalCurrentMonth={modalCurrentMonth}/>
-            </div>
-        </>
+        ? <StyledModal>
+            <ModalMonth today={today} modalCurrentMonth={modalCurrentMonth} setModalCurrentMonth={setModalMonth}/>
+            <ModalDate today={today} tdEventListener={tdEventListener} modalCurrentMonth={modalCurrentMonth}/>
+        </StyledModal>
         : todoMemo
-        ? <>
-            <div className='modal'>
-                <Memo memoConfirm={memoConfirm} memoDelete={memoDelete} memoModalValue={memoModalValue}/>
-            </div>
-        </>
+        ? <StyledModal>
+            <Memo memoConfirm={memoConfirm} memoDelete={memoDelete} memoModalValue={memoModalValue}/>
+        </StyledModal>
         : <>
-            <div className='modal' >
-
-                <div className='modifyDelete'>
+            <StyledModal className='modal'>
+                <ModalMenu>
                     <button onClick={(e) => modalModify(e)}><i className="fa-solid fa-pencil"></i><br />수정하기</button>
                     <button onClick={modalDelete}><i className="fa-solid fa-trash-can"></i><br />삭제하기</button>
-                </div>
+                </ModalMenu>
                 <button onClick={modalChangeDay}><div><i className="fa-solid fa-arrow-turn-down"></i></div>날짜 바꾸기</button>
                 <button onClick={modalMemo}><div><i className="fa-regular fa-square-minus"></i></div>메모</button>
                 {memoShow}
-            </div>
+            </StyledModal>
         </>
 
     return (
-        <div key={'modal'} className={`modal-container ${isModalOpen !== -1 ? 'modalShow' : ''}`}>
+        <ModalContainer key={'modal'} className={`modal-container ${isModalOpen !== -1 ? 'modalShow' : ''}`}>
             {modal}
-        </div>
+        </ModalContainer>
     );
 }

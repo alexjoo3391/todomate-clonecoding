@@ -1,4 +1,5 @@
 import {useRecoilState} from 'recoil'
+import {StyledCalendarMonth} from "../styles/style.js";
 
 // 상단 년,월 표시
 export default function CalendarMonth({today, currentMonth, setCurrentMonth, setSelectedDay}) {
@@ -27,7 +28,7 @@ export default function CalendarMonth({today, currentMonth, setCurrentMonth, set
     }
 
     return (
-        <div key={'month'} className='calendar-month'>
+        <StyledCalendarMonth key={'month'}>
             <p>
                 {(today.getFullYear() + (Math.floor((today.getMonth() + currentMonth) / 12))) + '년 ' + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
             </p>
@@ -35,6 +36,6 @@ export default function CalendarMonth({today, currentMonth, setCurrentMonth, set
                 <button className='PrevMonthBtn' onClick={() => monthOnClick(false)}><i className="fa-solid fa-chevron-left"></i></button>
                 <button className='NextMonthBtn' onClick={() => monthOnClick(true)}><i className="fa-solid fa-chevron-right"></i></button>
             </div>
-        </div>
+        </StyledCalendarMonth>
     )
 }
