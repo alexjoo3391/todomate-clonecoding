@@ -197,9 +197,9 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, cur
     }
 
     function modifyingTodoConfirm(n, i) {
-        const val = document.querySelector('.modifyingTodoInput').value;
-        const sessionVal= JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
-        sessionStorage.setItem(`todo${n}${dayString}`, JSON.stringify(sessionVal.slice(0, i).concat(val, sessionVal.slice(i + 1))));
+        const value = document.querySelector('.modifyingTodoInput').value;
+        const sessionValue = JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
+        sessionStorage.setItem(`todo${n}${dayString}`, JSON.stringify(sessionValue.slice(0, i).concat(value, sessionValue.slice(i + 1))));
         reloadSessionTodoItemList();
     }
 
@@ -210,26 +210,31 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, cur
     }
 
     function deletingTodoConfirm(n, i) {
-        const sessionVal = JSON.parse(sessionStorage.getItem(`todo${n}${dayString}`));
-        const sessionCheckVal = JSON.parse(sessionStorage.getItem(`todoCheck${n}${dayString}`));
-        const sessionMemoVal = JSON.parse(sessionStorage.getItem(`todoMemo${n}${dayString}`));
-        const sessionMemoCheckVal = JSON.parse(sessionStorage.getItem(`todoMemoCheck${n}${dayString}`));
 
-        const newVal = JSON.stringify(sessionVal.slice(0, i).concat(sessionVal.slice(i + 1)));
-        const newCheckVal = JSON.stringify(sessionCheckVal.slice(0, i).concat(sessionCheckVal.slice(i + 1)));
-        const newMemoVal = JSON.stringify(sessionMemoVal.slice(0, i).concat(sessionMemoVal.slice(i + 1)));
-        const newMemoCheckVal = JSON.stringify(sessionMemoCheckVal.slice(0, i).concat(sessionMemoCheckVal.slice(i + 1)));
+        const sessionObjectValue = [
+            JSON.parse(sessionStorage.getItem(`todo1${dayString}`)),
+            JSON.parse(sessionStorage.getItem(`todo2${dayString}`)),
+            JSON.parse(sessionStorage.getItem(`todo3${dayString}`))
+        ];
 
-        if(newVal !== '[]') {
-            sessionStorage.setItem(`todo${n}${dayString}`, newVal);
-            sessionStorage.setItem(`todoCheck${n}${dayString}`, newCheckVal);
-            sessionStorage.setItem(`todoMemo${n}${dayString}`, newMemoVal);
-            sessionStorage.setItem(`todoMemoCheck${n}${dayString}`, newMemoCheckVal);
+        const sessionTodo = getObjectValue(sessionObjectValue, 'todo')[i];
+        const sessionTodoCheck = getObjectValue(sessionObjectValue, 'todoCheck')[i];
+        const sessionMemo = getObjectValue(sessionObjectValue, 'memo')[i];
+        const sessionMemoCheck = getObjectValue(sessionObjectValue, 'memoCheck')[i];
+        const newTodoValue = sessionTodo.slice(0, i).concat(sessionTodo.slice(i + 1));
+        const newTodoCheckValue = sessionTodoCheck.slice(0, i).concat(sessionTodoCheck.slice(i + 1));
+        const newMemoValue = sessionMemo.slice(0, i).concat(sessionMemo.slice(i + 1));
+        const newMemoCheckValue = sessionMemoCheck.slice(0, i).concat(sessionMemoCheck.slice(i + 1));
+
+        todoObject[n - 1].todo = newTodoValue;
+        todoObject[n - 1].todoCheck = newTodoCheckValue;
+        todoObject[n - 1].memo = newMemoValue;
+        todoObject[n - 1].memoCheck = newMemoCheckValue;
+
+        if(JSON.stringify(newTodoValue) !== '[]') {
+            sessionStorage.setItem(`todo${n}${dayString}`, JSON.stringify(todoObject[n - 1]));
         } else {
             sessionStorage.removeItem(`todo${n}${dayString}`);
-            sessionStorage.removeItem(`todoCheck${n}${dayString}`);
-            sessionStorage.removeItem(`todoMemo${n}${dayString}`);
-            sessionStorage.removeItem(`todoMemoCheck${n}${dayString}`);
         }
 
         reloadSessionTodoItemList();
