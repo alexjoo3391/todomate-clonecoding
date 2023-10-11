@@ -1,6 +1,6 @@
 
 // 달력 표시
-import {Table} from "../styles/style.js";
+import {ModalTable, Table} from "../styles/style.js";
 
 export default function ModalDate({today, tdEventListener, todoItems = [], modalCurrentMonth}) {
 
@@ -29,7 +29,7 @@ export default function ModalDate({today, tdEventListener, todoItems = [], modal
     }
 
     return (
-        <Table key={'date'} className={'modalTable'}>
+        <ModalTable key={'date'}>
             <thead>
             <tr key={'trh'}>
                 <th key={'h0'}>월</th>
@@ -44,6 +44,6 @@ export default function ModalDate({today, tdEventListener, todoItems = [], modal
             <tbody>
             {days}
             </tbody>
-        </Table>
+        </ModalTable>
     )
 }

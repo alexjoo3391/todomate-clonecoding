@@ -1,5 +1,5 @@
 import {useRecoilState} from 'recoil'
-import {DayBox, SelectedDay, Table, Td} from "../styles/style.js";
+import {DayBox, SelectedDay, Table, Td, Thead} from "../styles/style.js";
 
 // 달력 표시
 export default function CalendarDate({today, tdEventListener, todoItems = {}, currentMonth, selectedDay, calendarMode}) {
@@ -84,7 +84,7 @@ export default function CalendarDate({today, tdEventListener, todoItems = {}, cu
 
     return (
         <Table key={'date'}>
-            <thead>
+            <Thead>
             <tr key={'trh'}>
                 <th key={'h0'}>월</th>
                 <th key={'h1'}>화</th>
@@ -94,7 +94,7 @@ export default function CalendarDate({today, tdEventListener, todoItems = {}, cu
                 <th key={'h5'}>토</th>
                 <th key={'h6'}>일</th>
             </tr>
-            </thead>
+            </Thead>
             <tbody>
             {days}
             </tbody>

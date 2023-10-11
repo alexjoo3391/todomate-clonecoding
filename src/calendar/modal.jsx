@@ -15,7 +15,7 @@ import ModalMonth from "./modalMonth.jsx";
 import ModalDate from "./modalDate.jsx";
 import Memo from "./memo.jsx";
 import {useState} from "react";
-import {ModalContainer, ModalMenu, StyledModal} from "../styles/style.js";
+import {MemoBox, ModalContainer, ModalMenu, StyledModal} from "../styles/style.js";
 
 // 모달 표시 
 export default function Modal({currentMonth, selectedDay}) {
@@ -133,9 +133,9 @@ export default function Modal({currentMonth, selectedDay}) {
     const memoModalValue = todoMemoValue[isModalOpen] ? todoMemoValue[isModalOpen] : null;
     if(memoModalValue !== null) {
         memoShow = (
-            <pre className='memoShow'>
+            <MemoBox>
                 {memoModalValue}
-            </pre>
+            </MemoBox>
         );
 
     }

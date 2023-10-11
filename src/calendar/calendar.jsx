@@ -9,7 +9,15 @@ import {useState} from 'react'
 
 import {deleteStateAtom, isModalOpenAtom, modifyStateAtom} from "./atoms.js";
 import {useRecoilState} from 'recoil'
-import {CalendarMain, CalendarTodo, ModalContainer, Radio, RadioList} from "../styles/style.js";
+import {
+    CalendarMain,
+    CalendarTodo,
+    DiaryModal,
+    DiaryModalContainer,
+    ModalContainer,
+    Radio,
+    RadioList
+} from "../styles/style.js";
 
 export default function Calendar() {
 
@@ -116,11 +124,11 @@ export default function Calendar() {
     }
 
     const diaryModalOpenPage = (
-        <div className='diaryModalOpenContainer' onClick={cancelDiary}>
-            <div className='diaryModalOpen' onClick={(e) => e.stopPropagation()}>
+        <DiaryModalContainer className='diaryModalContainer' onClick={cancelDiary}>
+            <DiaryModal className='diaryModal' onClick={(e) => e.stopPropagation()}>
                 <Diary  day={editingDiary} currentMonth={currentMonth} cancelDiary={cancelDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
-            </div>
-        </div>
+            </DiaryModal>
+        </DiaryModalContainer>
     )
 
     function removeDiary() {

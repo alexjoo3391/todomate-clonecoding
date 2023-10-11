@@ -11,7 +11,7 @@ import {
     todoMemoAtom,
     todoMemoValueAtom,
 } from './atoms.js';
-import {StyledTodo, TodoCheck, TodoCheckBox, TodoList, TodoMemo} from "../styles/style.js";
+import {StyledTodo, TextInput, TodoCheck, TodoCheckBox, TodoInput, TodoList, TodoMemo} from "../styles/style.js";
 
 // 목표 리스트 표시
 export default function Todo({today, reloadTodoItems, toggleModal, currentMonth, selectedDay}) {
@@ -118,11 +118,11 @@ export default function Todo({today, reloadTodoItems, toggleModal, currentMonth,
             }
         }
         todoExtend.push(
-            <div className={`todoInput${n} ${selectedInputDisplay ? 'display' : ''}`}
+            <TodoInput className={`todoInput${n} ${selectedInputDisplay ? 'display' : ''}`}
                  onClick={(e) => e.stopPropagation()}>
-                <input type="text" onKeyUp={(e) => enterCheck(e, () => todoInputClick(n))}/>
+                <TextInput type="text" onKeyUp={(e) => enterCheck(e, () => todoInputClick(n))}/>
                 <button onClick={() => todoInputClick(n)}>+</button>
-            </div>
+            </TodoInput>
         );
 
         return todoExtend;

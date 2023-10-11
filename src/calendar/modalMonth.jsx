@@ -1,3 +1,4 @@
+import {StyledCalendarMonth} from "../styles/style.js";
 
 export default function ModalMonth({today, modalCurrentMonth, setModalCurrentMonth}) {
     const monthFromToday = (today.getMonth() + modalCurrentMonth) % 12 + 1;
@@ -12,7 +13,7 @@ export default function ModalMonth({today, modalCurrentMonth, setModalCurrentMon
 
 
     return (
-        <div key={'month'} className='calendar-month'>
+        <StyledCalendarMonth key={'month'} className='calendar-month'>
             <p>
                 {(today.getFullYear() + (Math.floor((today.getMonth() + modalCurrentMonth) / 12)) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
             </p>
@@ -20,6 +21,6 @@ export default function ModalMonth({today, modalCurrentMonth, setModalCurrentMon
                 <button className='PrevMonthBtn' onClick={() => monthOnClick(false)}><i className="fa-solid fa-chevron-left"></i></button>
                 <button className='NextMonthBtn' onClick={() => monthOnClick(true)}><i className="fa-solid fa-chevron-right"></i></button>
             </div>
-        </div>
+        </StyledCalendarMonth>
     )
 }

@@ -10,9 +10,18 @@ export const GlobalStyle = createGlobalStyle`
 
 export const StyledCalendar = styled.div`
   padding: 10px;
+  
+  @media (min-width: 700px) {
+    display: flex;
+    gap: 50px;
+  }
 `;
 
-export const CalendarMain = styled.div``;
+export const CalendarMain = styled.div`
+  @media (min-width: 700px) {
+    width: 400px;
+  }
+`;
 
 export const CalendarTodo = styled.div``;
 
@@ -25,6 +34,10 @@ export const ModalContainer = styled.div`
   background-color: #00000066;
   display: none;
   padding-bottom: 180px;
+  
+  &.modalShow {
+    display: block !important;
+  }
 `;
 
 export const StyledCalendarMonth = styled.div`
@@ -49,6 +62,15 @@ export const Table = styled.table`
   text-align: center;
 `;
 
+export const Thead = styled.thead`
+  
+  margin-top: 10px;
+  
+  & th {
+    font-size: 10px;
+  }
+`;
+
 export const Td = styled.td`
   &.td p {
     font-size: 13px;
@@ -66,6 +88,15 @@ export const Td = styled.td`
     height: 20px;
   }
 `
+
+export const TextInput = styled.input`
+  &[type=text] {
+    width: calc(100% - 20px);
+    margin-top: 1px;
+    border: none;
+    border-bottom: 1px solid black;
+  }
+`;
 
 export const DayBox = styled.div`
   &.dayBox {
@@ -152,7 +183,22 @@ export const Radio = styled.div`
   }
 `;
 
-export const StyledTodo = styled.div``;
+export const StyledTodo = styled.div`
+  & > p > button {
+    background-color: white;
+    border: none;
+    width: 20px;
+    height: 20px;
+  }
+  
+  & > p > button:hover {
+    cursor: pointer;
+  }
+
+  @media (min-width: 700px) {
+    min-width: 226px;
+  }
+`;
 
 export const TodoList = styled.div`
   & > p {
@@ -225,6 +271,28 @@ export const TodoCheckBox = styled.div`
   }
 `;
 
+export const TodoInput = styled.div`
+  &.display {
+    display: flex !important;
+    
+    & button {
+      background-color: white;
+      border: none;
+      width: 20px;
+      height: 20px;
+      
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    
+  }
+  
+  &.todoInput1, &.todoInput2, &.todoInput3 {
+    display: none;
+  }
+`;
+
 export const TodoMemo = styled.div`
   & p {
     padding-left: 30px;
@@ -283,6 +351,10 @@ export const StyledModal = styled.div`
   & > button:nth-child(3) div {
     background-color: gold;
   }
+
+  @media (min-width: 500px) {
+    width: 460px;
+  }
 `;
 
 export const ModalMenu = styled.div`
@@ -302,5 +374,187 @@ export const ModalMenu = styled.div`
 
   & button:last-child i {
     color: crimson;
+  }
+`;
+
+export const ModalTable = styled.div`
+  text-align: center;
+  width: 100%;
+  
+  & .selected {
+    background-color: dodgerblue;
+    color: white;
+  }
+  
+  & p {
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+  }
+  
+  & td {
+    width: 40px;
+    height: 40px;
+  }
+`;
+
+export const MemoBox = styled.pre`
+  padding: 10px;
+  background-color: lemonchiffon;
+  border-radius: 10px;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const MemoMenu = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  
+  & button{
+    background-color: transparent;
+    font-size: 16px;
+    display: inline-flex;
+  }
+  
+  & button:first-child {
+    color: red;
+  }
+`;
+
+export const MemoTextArea = styled.textarea`
+  resize: none;
+  border: none;
+  background-color: lemonchiffon;
+  border-radius: 20px;
+  padding: 10px;
+`;
+
+export const DiaryModalContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100% - 180px);
+  background-color: #00000066;
+  padding-bottom: 180px;
+`;
+
+export const DiaryModal = styled.div`
+  width: calc(100% - 40px);
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 0);
+  background-color: white;
+  padding: 20px;
+  min-height: 350px;
+
+  & td {
+    font-size: 20px;
+  }
+
+  @media (min-width: 500px) {
+    width: 460px;
+  }
+`;
+
+export const DiaryContainer = styled.div`
+  padding: 10px;
+  
+  & > p {
+    margin: 10px 0;
+  }
+  
+  & input[type=button]:hover {
+    cursor: pointer;
+  }
+  
+  & textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+    height: 100px;
+  }
+`;
+
+export const DiaryHeader = styled.div`
+  display: flex;
+  justify-content: space-between;  
+  
+  & p {
+    font-size: 20px;
+  }
+
+  & input {
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    line-height: 15px;
+  }
+`;
+
+export const DiaryEmoji = styled.div`
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;  
+  
+  & p {
+    font-size: 40px;
+  }
+  
+  & input {
+    font-size: 40px;
+    background-color: transparent;
+    border: none;
+  }
+`;
+
+export const NormalEmoji = styled.input`
+  &.emojiNormal {
+    color: transparent;
+    text-shadow: 0 0 0 dodgerblue;
+  }  
+`;
+
+export const UtilModalContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100% - 180px);
+  background-color: #00000011;
+  padding-bottom: 180px;  
+`;
+
+export const StyledUtilModal = styled.div`
+  width: calc(100% - 20px);
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 0);
+  padding: 10px;
+  
+  & input {
+    width: 100%;
+    height: 60px;
+    border: none;
+    background-color: #dddddd;
+    color: dodgerblue;
+    border-radius: 10px;
+    
+    &:first-child {
+      border-radius: 10px 10px 0 0;
+      border-bottom: 1px solid #999999;
+    }
+    
+    &:nth-child(2) {
+      border-radius: 0 0 10px 10px;
+      margin-bottom: 10px;
+    }
   }
 `;

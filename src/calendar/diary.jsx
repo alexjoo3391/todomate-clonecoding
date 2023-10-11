@@ -1,6 +1,14 @@
 import {useEffect, useState} from "react";
+import {
+    DiaryContainer,
+    DiaryEmoji,
+    DiaryHeader,
+    DiaryModal,
+    DiaryModalContainer,
+    NormalEmoji, StyledUtilModal, UtilModalContainer
+} from "../styles/style.js";
 
-export default function Diary({day, currentMonth, cancelDiary, confirmDiary, removeDiary, isModal, utilModalShow, setUtilModalShow, setDiaryModal}) {
+export default function Diary({day, currentMonth, cancelDiary, confirmDiary, removeDiary, isModal, utilModalShow, setUtilModalShow, setDiaryModalOpen}) {
 
     const [emojiModalShow, setEmojiModalShow] = useState(false);
     const [currentEmoji, setCurrentEmoji] = useState('🫥');
@@ -32,21 +40,21 @@ export default function Diary({day, currentMonth, cancelDiary, confirmDiary, rem
     }
 
     return (
-        <div className='diaryContainer'>
-            <div className='diaryHeader'>
+        <DiaryContainer>
+            <DiaryHeader>
                 <input type='button' onClick={cancelDiary} value='✕'/>
                 <p>일기</p>
                 {
                     isModal
                     ? <input type='button' onClick={() => setUtilModalShow(true)} value='...'/>
                     : <input type='button' onClick={() => confirmDiary(document.querySelector('#diary').value, currentEmoji)} value='완료'/>}
-            </div>
+            </DiaryHeader>
             {
                 isModal
-                ? <ModalPage cancelDiary={cancelDiary} setUtilModalShow={setUtilModalShow} setDiaryModal={setDiaryModal} removeDiary={removeDiary} diaryValue={diaryValue} date={date} weekDay={weekDay} currentEmoji={currentEmoji} utilModalShow={utilModalShow} />
+                ? <ModalPage cancelDiary={cancelDiary} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen} removeDiary={removeDiary} diaryValue={diaryValue} date={date} weekDay={weekDay} currentEmoji={currentEmoji} utilModalShow={utilModalShow} />
                 : <DefaultPage currentEmoji={currentEmoji} date={date} weekDay={weekDay} diaryValue={diaryValue} emojiModalShow={emojiModalShow} setEmojiModalShow={setEmojiModalShow} setCurrentEmoji={setCurrentEmoji}/>
             }
-        </div>
+        </DiaryContainer>
     );
 }
 
@@ -76,23 +84,24 @@ function EmojiModal({setCurrentEmoji, setEmojiModalShow}) {
 
 
     return (
-        <div className='emojiModalContainer' onClick={closeModal}>
-            <div className='emojiModal' onClick={(e) => e.stopPropagation()}>
+        <DiaryModalContainer onClick={closeModal}>
+            <DiaryModal onClick={(e) => e.stopPropagation()}>
                 <table>
                     <thead></thead>
                     <tbody>
                         {emojiTable}
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </DiaryModal>
+        </DiaryModalContainer>
     )
 }
 
-function UtilModal({setDiaryModal, removeDiary, cancelDiary, setUtilModalShow}) {
+function UtilModal({setDiaryModalOpen, removeDiary, cancelDiary, setUtilModalShow}) {
 
     function modifyProcess() {
-        setDiaryModal(false);
+        console.log('asd')
+        setDiaryModalOpen(false);
         setUtilModalShow(false);
     }
 
@@ -102,22 +111,22 @@ function UtilModal({setDiaryModal, removeDiary, cancelDiary, setUtilModalShow}) 
     }
 
     return (
-        <div className='utilModalContainer' onClick={(e) => e.stopPropagation()}>
-            <div className='utilModal'>
+        <UtilModalContainer onClick={(e) => e.stopPropagation()}>
+            <StyledUtilModal>
                 <input type='button' onClick={modifyProcess} defaultValue='수정' />
                 <input type='button' onClick={removeProcess} defaultValue='삭제' />
                 <input type='button' onClick={cancelDiary} defaultValue='취소' />
-            </div>
-        </div>
+            </StyledUtilModal>
+        </UtilModalContainer>
     )
 }
 
 function DefaultPage({currentEmoji, date, weekDay, diaryValue, emojiModalShow, setEmojiModalShow, setCurrentEmoji}) {
     return (
         <>
-            <div className='diaryEmoji'>
-                <input type='button' onClick={() => setEmojiModalShow(true)} value={currentEmoji} className={`${currentEmoji === '🫥' ? 'emojiNormal' : ''}`}/>
-            </div>
+            <DiaryEmoji>
+                <NormalEmoji type='button' onClick={() => setEmojiModalShow(true)} value={currentEmoji} className={`${currentEmoji === '🫥' ? 'emojiNormal' : ''}`}/>
+            </DiaryEmoji>
             <p>{`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${weekDay}요일` }</p>
             <textarea id='diary' defaultValue={diaryValue} placeholder='오늘은 어떤 하루였나요?'></textarea>
             {emojiModalShow ? <EmojiModal setCurrentEmoji={setCurrentEmoji} setEmojiModalShow={setEmojiModalShow}/> : ''}
@@ -125,15 +134,15 @@ function DefaultPage({currentEmoji, date, weekDay, diaryValue, emojiModalShow, s
     )
 }
 
-function ModalPage({currentEmoji, date, weekDay, diaryValue, utilModalShow, setDiaryModal, removeDiary, cancelDiary, setUtilModalShow}) {
+function ModalPage({currentEmoji, date, weekDay, diaryValue, utilModalShow, setDiaryModalOpen, removeDiary, cancelDiary, setUtilModalShow}) {
     return (
         <>
-            <div className='diaryEmoji'>
+            <DiaryEmoji>
                 <p>{currentEmoji}</p>
-            </div>
+            </DiaryEmoji>
             <p>{`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${weekDay}요일` }</p>
             <p>{diaryValue}</p>
-            {utilModalShow ? <UtilModal setDiaryModal={setDiaryModal} removeDiary={removeDiary} cancelDiary={cancelDiary} setUtilModalShow={setUtilModalShow}/> : ''}
+            {utilModalShow ? <UtilModal setDiaryModalOpen={setDiaryModalOpen} removeDiary={removeDiary} cancelDiary={cancelDiary} setUtilModalShow={setUtilModalShow}/> : ''}
         </>
     )
 }
