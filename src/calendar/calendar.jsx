@@ -14,30 +14,34 @@ import {
     CalendarTodo,
     DiaryModal,
     DiaryModalContainer,
-    ModalContainer,
     Radio,
     RadioList
 } from "../styles/style.js";
 
 export default function Calendar() {
 
+    const calendarModeEnum = {
+        TODO: "todo",
+        DIARY: "diary",
+    }
+
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(0);
     const [selectedDay, setSelectedDay] = useState(today.getDate());
-    const [todoItems, setTodoItems] = useState({...sessionStorage});
+    const [sessionTodoItemList, setSessionTodoItemList] = useState({...sessionStorage});
     const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
 
     const [deletingTodo, setDeletingTodo] = useRecoilState(deleteStateAtom);
     const [modifyingTodo, setModifyingTodo] = useRecoilState(modifyStateAtom);
 
     const [diaryModalOpen, setDiaryModalOpen] = useState(false);
-    const [calendarMode, setCalendarMode] = useState("todo"); // todo or diary
+    const [calendarMode, setCalendarMode] = useState(calendarModeEnum.TODO); // todo or diary
     const [editingDiary, setEditingDiary] = useState(0);
 
     const [utilModalShow, setUtilModalShow] = useState(false);
 
-    function tdEventListener(e) {
-        if(calendarMode === 'todo') {
+    function changeDayEventListener(e) {
+        if(calendarMode === calendarModeEnum.TODO) {
             const day = e.target.innerText;
             if (day !== '' || e.target.nodeName === 'DIV') {
                 const selected = document.querySelector('.selected');
@@ -79,25 +83,25 @@ export default function Calendar() {
         }
     }
 
-    function reloadTodoItems() {
-        setTodoItems({...sessionStorage});
+    function reloadSessionTodoItemList() {
+        setSessionTodoItemList({...sessionStorage});
         setDeletingTodo(-1);
         setModifyingTodo(-1);
     }
 
     function todoModeCheck(e) {
         if(e.target.value === 'on') {
-            setCalendarMode("todo");
+            setCalendarMode(calendarModeEnum.TODO);
         }
     }
 
     function diaryModeCheck(e) {
         if(e.target.value === 'on') {
-            setCalendarMode("diary");
+            setCalendarMode(calendarModeEnum.DIARY);
         }
     }
 
-    function cancelDiary() {
+    function closeDiary() {
         if(utilModalShow) {
             setUtilModalShow(false);
         } else {
@@ -124,9 +128,9 @@ export default function Calendar() {
     }
 
     const diaryModalOpenPage = (
-        <DiaryModalContainer className='diaryModalContainer' onClick={cancelDiary}>
+        <DiaryModalContainer className='diaryModalContainer' onClick={closeDiary}>
             <DiaryModal className='diaryModal' onClick={(e) => e.stopPropagation()}>
-                <Diary  day={editingDiary} currentMonth={currentMonth} cancelDiary={cancelDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
+                <Diary  day={editingDiary} currentMonth={currentMonth} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
             </DiaryModal>
         </DiaryModalContainer>
     )
@@ -144,21 +148,21 @@ export default function Calendar() {
 
     return editingDiary !== 0 && !diaryModalOpen
         ? <>
-            <Diary  day={editingDiary} currentMonth={currentMonth} cancelDiary={cancelDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
+            <Diary  day={editingDiary} currentMonth={currentMonth} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
         </>
         : <>
             <CalendarMain>
                 <CalendarMonth today={today} currentMonth={currentMonth} setCurrentMonth={(n) => setCurrentMonth(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
-                <CalendarDate today={today} tdEventListener={tdEventListener} todoItems={todoItems} currentMonth={currentMonth} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
+                <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} currentMonth={currentMonth} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
                 <RadioList>
                     <Radio>
-                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === 'todo'}/><label htmlFor='todoRadio'>할 일</label>
-                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => diaryModeCheck(e)} checked={calendarMode === 'diary'}/><label htmlFor='diaryRadio'>일기</label>
+                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>
+                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => diaryModeCheck(e)} checked={calendarMode === calendarModeEnum.DIARY}/><label htmlFor='diaryRadio'>일기</label>
                     </Radio>
                 </RadioList>
             </CalendarMain>
             <CalendarTodo>
-                <Todo today={today} reloadTodoItems={reloadTodoItems} toggleModal={(n) => setIsModalOpen(n)} currentMonth={currentMonth} selectedDay={selectedDay}/>
+                <Todo today={today} reloadSessionTodoItemList={reloadSessionTodoItemList} toggleModal={(n) => setIsModalOpen(n)} currentMonth={currentMonth} selectedDay={selectedDay}/>
             </CalendarTodo>
             <Modal currentMonth={currentMonth} selectedDay={selectedDay}/>
             {diaryModalOpen ? diaryModalOpenPage : ''}

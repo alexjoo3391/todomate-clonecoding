@@ -88,19 +88,21 @@ export default function Modal({currentMonth, selectedDay}) {
 
     function memoConfirm() {
         const memoValue = document.querySelector('#memo').value;
-        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, selectedDay);
-        const selectedDayString = selectedDate.getFullYear().toString()
-            + (('0' + (selectedDate.getMonth() + 1)).slice(-2)).toString()
-            + (('0' + selectedDate.getDate()).slice(-2)).toString();
+        if(memoValue !== '') {
+            const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, selectedDay);
+            const selectedDayString = selectedDate.getFullYear().toString()
+                + (('0' + (selectedDate.getMonth() + 1)).slice(-2)).toString()
+                + (('0' + selectedDate.getDate()).slice(-2)).toString();
 
-        const memo = JSON.parse(sessionStorage.getItem(`todoMemo${modifyingTodoIndex}${selectedDayString}`));
-        const memoCheck = JSON.parse(sessionStorage.getItem(`todoMemoCheck${modifyingTodoIndex}${selectedDayString}`));
+            const memo = JSON.parse(sessionStorage.getItem(`todoMemo${modifyingTodoIndex}${selectedDayString}`));
+            const memoCheck = JSON.parse(sessionStorage.getItem(`todoMemoCheck${modifyingTodoIndex}${selectedDayString}`));
 
-        const i = isModalOpen;
+            const i = isModalOpen;
 
-        setTodoMemoValue(memoValue);
-        sessionStorage.setItem(`todoMemoCheck${modifyingTodoIndex}${selectedDayString}`, JSON.stringify(memoCheck.slice(0, i).concat(1, memoCheck.slice(i + 1))));
-        sessionStorage.setItem(`todoMemo${modifyingTodoIndex}${selectedDayString}`, JSON.stringify(memo.slice(0, i).concat(memoValue, memo.slice(i + 1))));
+            setTodoMemoValue(memoValue);
+            sessionStorage.setItem(`todoMemoCheck${modifyingTodoIndex}${selectedDayString}`, JSON.stringify(memoCheck.slice(0, i).concat(1, memoCheck.slice(i + 1))));
+            sessionStorage.setItem(`todoMemo${modifyingTodoIndex}${selectedDayString}`, JSON.stringify(memo.slice(0, i).concat(memoValue, memo.slice(i + 1))));
+        }
         setTodoMemo(false);
         setIsModalOpen(-1);
     }

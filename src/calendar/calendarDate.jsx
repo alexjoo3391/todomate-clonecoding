@@ -2,7 +2,7 @@ import {useRecoilState} from 'recoil'
 import {DayBox, SelectedDay, Table, Td, Thead} from "../styles/style.js";
 
 // 달력 표시
-export default function CalendarDate({today, tdEventListener, todoItems = {}, currentMonth, selectedDay, calendarMode}) {
+export default function CalendarDate({today, changeDayEventListener, sessionTodoItemList = {}, currentMonth, selectedDay, calendarMode}) {
 
     let todoCount;
     let isExist = false;
@@ -38,9 +38,9 @@ export default function CalendarDate({today, tdEventListener, todoItems = {}, cu
                 diaryDay = false;
 
                 for (let i = 1; i <= 3; i++) {
-                    if (todoItems.hasOwnProperty(`todoCheck${i}${todoDateString}`)) {
+                    if (sessionTodoItemList.hasOwnProperty(`todoCheck${i}${todoDateString}`)) {
                         isExist = true;
-                        const todoDay = JSON.parse(todoItems[`todoCheck${i}${todoDateString}`]);
+                        const todoDay = JSON.parse(sessionTodoItemList[`todoCheck${i}${todoDateString}`]);
                         for (let j = 0; j < todoDay.length; j++) {
                             todoCheckCount++;
                             if (todoDay[j] === 0) {
@@ -74,7 +74,7 @@ export default function CalendarDate({today, tdEventListener, todoItems = {}, cu
             }
 
             week.push(
-                <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => tdEventListener(e)}>
+                <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => changeDayEventListener(e)}>
                     {isDayInMonth}
                 </Td>
             );
