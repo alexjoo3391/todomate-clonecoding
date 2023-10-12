@@ -2,15 +2,15 @@ import {useRecoilState} from 'recoil'
 import {DayBox, SelectedDay, Table, Td, Thead} from "../styles/style.js";
 
 // 달력 표시
-export default function CalendarDate({today, changeDayEventListener, sessionTodoItemList = {}, currentMonth, selectedDay, calendarMode}) {
+export default function CalendarDate({today, changeDayEventListener, sessionTodoItemList = {}, monthFromToday, selectedDay, calendarMode}) {
 
     let todoCount;
     let isExist = false;
     let diaryDay = false;
     let isToday = false;
 
-    const firstDay = new Date(today.getFullYear(), today.getMonth() + currentMonth, 1);
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + currentMonth + 1, 0);
+    const firstDay = new Date(today.getFullYear(), today.getMonth() + monthFromToday, 1);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + monthFromToday + 1, 0);
     const weekDay = (firstDay.getDay() ? firstDay.getDay() : 7);
     const weeks = Math.ceil((weekDay + lastDay.getDate() - 1) / 7);
 
@@ -21,9 +21,9 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
             let emoji = '🫥';
             isExist = false;
             diaryDay = false;
-            const classes = `${selectedDay && selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && currentMonth === today.getMonth() - today.getMonth() ? 'today' : ''}`
+            const classes = `${selectedDay && selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && monthFromToday === today.getMonth() - today.getMonth() ? 'today' : ''}`
 
-            const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, i * 7 + j - weekDay + 1);
+            const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, i * 7 + j - weekDay + 1);
             const dayString = date.getFullYear().toString()
                 + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
                 + (('0' + date.getDate()).slice(-2)).toString();
@@ -31,16 +31,16 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
             let todoCheckCount = 0;
 
             if (i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
-                const todoDate = new Date(today.getFullYear(), today.getMonth() + currentMonth, ((i * 7 + j) - weekDay + 1));
+                const todoDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, ((i * 7 + j) - weekDay + 1));
                 const todoDateString = todoDate.getFullYear().toString() + (('0' + (todoDate.getMonth() + 1)).slice(-2)).toString() + (('0' + todoDate.getDate()).slice(-2)).toString();
                 todoCount = 0;
                 isExist = false;
                 diaryDay = false;
 
                 for (let i = 1; i <= 3; i++) {
-                    if (sessionTodoItemList.hasOwnProperty(`todoCheck${i}${todoDateString}`)) {
+                    if (sessionTodoItemList.hasOwnProperty(`todo${i}${todoDateString}`)) {
                         isExist = true;
-                        const todoDay = JSON.parse(sessionTodoItemList[`todoCheck${i}${todoDateString}`]);
+                        const todoDay = JSON.parse(sessionTodoItemList[`todo${i}${todoDateString}`]).todoCheck;
                         for (let j = 0; j < todoDay.length; j++) {
                             todoCheckCount++;
                             if (todoDay[j] === 0) {
@@ -83,16 +83,16 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
     }
 
     return (
-        <Table key={'date'}>
+        <Table>
             <Thead>
-            <tr key={'trh'}>
-                <th key={'h0'}>월</th>
-                <th key={'h1'}>화</th>
-                <th key={'h2'}>수</th>
-                <th key={'h3'}>목</th>
-                <th key={'h4'}>금</th>
-                <th key={'h5'}>토</th>
-                <th key={'h6'}>일</th>
+            <tr>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+                <th>토</th>
+                <th>일</th>
             </tr>
             </Thead>
             <tbody>

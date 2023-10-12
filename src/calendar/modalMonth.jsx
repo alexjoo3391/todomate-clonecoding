@@ -1,13 +1,13 @@
 import {StyledCalendarMonth} from "../styles/style.js";
 
-export default function ModalMonth({today, modalCurrentMonth, setModalCurrentMonth}) {
-    const monthFromToday = (today.getMonth() + modalCurrentMonth) % 12 + 1;
+export default function ModalMonth({today, modalMonthFromToday, setModalMonthFromToday}) {
+    const monthFromToday = (today.getMonth() + modalMonthFromToday) % 12 + 1;
 
     function monthOnClick(pn) {
         if (pn) {
-            setModalCurrentMonth(modalCurrentMonth + 1);
+            setModalMonthFromToday(modalMonthFromToday + 1);
         } else {
-            setModalCurrentMonth(modalCurrentMonth - 1);
+            setModalMonthFromToday(modalMonthFromToday - 1);
         }
     }
 
@@ -15,7 +15,7 @@ export default function ModalMonth({today, modalCurrentMonth, setModalCurrentMon
     return (
         <StyledCalendarMonth key={'month'} className='calendar-month'>
             <p>
-                {(today.getFullYear() + (Math.floor((today.getMonth() + modalCurrentMonth) / 12)) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
+                {(today.getFullYear() + (Math.floor((today.getMonth() + modalMonthFromToday) / 12)) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
             </p>
             <div>
                 <button className='PrevMonthBtn' onClick={() => monthOnClick(false)}><i className="fa-solid fa-chevron-left"></i></button>

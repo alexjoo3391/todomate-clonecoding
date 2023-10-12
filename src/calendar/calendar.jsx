@@ -17,16 +17,18 @@ import {
     Radio,
     RadioList
 } from "../styles/style.js";
+import {Util} from "./util.js";
 
+const calendarModeEnum = {
+    TODO: "todo",
+    DIARY: "diary",
+}
+Object.freeze(calendarModeEnum);
 export default function Calendar() {
 
-    const calendarModeEnum = {
-        TODO: "todo",
-        DIARY: "diary",
-    }
 
     const today = new Date();
-    const [currentMonth, setCurrentMonth] = useState(0);
+    const [monthFromToday, setMonthFromToday] = useState(0);
     const [selectedDay, setSelectedDay] = useState(today.getDate());
     const [sessionTodoItemList, setSessionTodoItemList] = useState({...sessionStorage});
     const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
@@ -39,6 +41,8 @@ export default function Calendar() {
     const [editingDiary, setEditingDiary] = useState(0);
 
     const [utilModalShow, setUtilModalShow] = useState(false);
+
+    const util = new Util(today);
 
     function changeDayEventListener(e) {
         if(calendarMode === calendarModeEnum.TODO) {
@@ -111,7 +115,7 @@ export default function Calendar() {
     }
 
     function confirmDiary(val, emoji) {
-        const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, editingDiary);
+        const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, editingDiary);
         const dayString = date.getFullYear().toString()
             + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
             + (('0' + date.getDate()).slice(-2)).toString();
@@ -127,16 +131,8 @@ export default function Calendar() {
         }
     }
 
-    const diaryModalOpenPage = (
-        <DiaryModalContainer className='diaryModalContainer' onClick={closeDiary}>
-            <DiaryModal className='diaryModal' onClick={(e) => e.stopPropagation()}>
-                <Diary  day={editingDiary} currentMonth={currentMonth} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
-            </DiaryModal>
-        </DiaryModalContainer>
-    )
-
     function removeDiary() {
-        const date = new Date(today.getFullYear(), today.getMonth() + currentMonth, editingDiary);
+        const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, editingDiary);
         const dayString = date.getFullYear().toString()
             + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
             + (('0' + date.getDate()).slice(-2)).toString();
@@ -146,14 +142,16 @@ export default function Calendar() {
         setEditingDiary(0);
     }
 
+    const isDiaryModalOpen = diaryModalOpen ? <DiaryModalOpenPage closeDiary={closeDiary} editingDiary={editingDiary} monthFromToday={monthFromToday} confirmDiary={confirmDiary} removeDiary={removeDiary} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen} /> : '';
+
     return editingDiary !== 0 && !diaryModalOpen
         ? <>
-            <Diary  day={editingDiary} currentMonth={currentMonth} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
+            <Diary  day={editingDiary} monthFromToday={monthFromToday} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
         </>
         : <>
             <CalendarMain>
-                <CalendarMonth today={today} currentMonth={currentMonth} setCurrentMonth={(n) => setCurrentMonth(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
-                <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} currentMonth={currentMonth} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
+                <CalendarMonth today={today} monthFromToday={monthFromToday} onCurrentMonthChange={(n) => setMonthFromToday(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
+                <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} monthFromToday={monthFromToday} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
                 <RadioList>
                     <Radio>
                         <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>
@@ -162,10 +160,19 @@ export default function Calendar() {
                 </RadioList>
             </CalendarMain>
             <CalendarTodo>
-                <Todo today={today} reloadSessionTodoItemList={reloadSessionTodoItemList} toggleModal={(n) => setIsModalOpen(n)} currentMonth={currentMonth} selectedDay={selectedDay}/>
+                <Todo today={today} reloadSessionTodoItemList={reloadSessionTodoItemList} toggleModal={(n) => setIsModalOpen(n)} monthFromToday={monthFromToday} selectedDay={selectedDay}/>
             </CalendarTodo>
-            <Modal currentMonth={currentMonth} selectedDay={selectedDay}/>
-            {diaryModalOpen ? diaryModalOpenPage : ''}
+            <Modal monthFromToday={monthFromToday} selectedDay={selectedDay}/>
+            {isDiaryModalOpen}
         </>
 }
 
+function DiaryModalOpenPage({closeDiary, editingDiary, monthFromToday, confirmDiary, removeDiary, utilModalShow, setUtilModalShow, setDiaryModalOpen}) {
+    return (
+        <DiaryModalContainer className='diaryModalContainer' onClick={closeDiary}>
+            <DiaryModal className='diaryModal' onClick={(e) => e.stopPropagation()}>
+                <Diary  day={editingDiary} monthFromToday={monthFromToday} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
+            </DiaryModal>
+        </DiaryModalContainer>
+    )
+}

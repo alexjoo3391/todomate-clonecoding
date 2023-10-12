@@ -377,7 +377,7 @@ export const ModalMenu = styled.div`
   }
 `;
 
-export const ModalTable = styled.div`
+export const ModalTable = styled.table`
   text-align: center;
   width: 100%;
   

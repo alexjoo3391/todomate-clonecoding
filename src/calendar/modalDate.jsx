@@ -2,14 +2,14 @@
 // 달력 표시
 import {ModalTable, Table} from "../styles/style.js";
 
-export default function ModalDate({today, tdEventListener, todoItems = [], modalCurrentMonth}) {
+export default function ModalDate({today, tdEventListener, todoItems = [], modalMonthFromToday}) {
 
-    const firstDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, 1);
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth + 1, 0);
+    const firstDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, 1);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday + 1, 0);
     const weekDay = (firstDay.getDay() ? firstDay.getDay() : 7);
     const weeks = Math.ceil((weekDay + lastDay.getDate() - 1) / 7);
 
-    const selectDay = new Date(today.getFullYear(), today.getMonth() + modalCurrentMonth, parseInt(document.querySelector('.selected').innerText)).getDate();
+    const selectDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(document.querySelector('.selected').innerText)).getDate();
 
     const days = [];
     for (let i = 0; i < weeks; i++) {

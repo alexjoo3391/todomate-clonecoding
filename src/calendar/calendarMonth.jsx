@@ -2,39 +2,35 @@ import {useRecoilState} from 'recoil'
 import {StyledCalendarMonth} from "../styles/style.js";
 
 // 상단 년,월 표시
-export default function CalendarMonth({today, currentMonth, setCurrentMonth, setSelectedDay}) {
+export default function CalendarMonth({today, monthFromToday, onCurrentMonthChange, setSelectedDay}) {
 
-    const monthFromToday = (today.getMonth() + currentMonth) % 12 + 1;
+    const currentMonth = (today.getMonth() + monthFromToday) % 12 + 1;
 
-    function monthOnClick(pn) {
+    function handleMonthClick(isNext) {
         let select;
-        if (pn) {
+        if (isNext) {
             select = 1;
-            setCurrentMonth(currentMonth + 1);
+            onCurrentMonthChange(monthFromToday + 1);
         } else {
-            select = new Date(today.getFullYear(), today.getMonth() + currentMonth, 0).getDate();
-            setCurrentMonth(currentMonth - 1);
+            select = new Date(today.getFullYear(), today.getMonth() + monthFromToday, 0).getDate();
+            onCurrentMonthChange(monthFromToday - 1);
         }
         const selected = document.querySelector('.selected');
         if (selected) {
-            changeSelectDay(select);
+            setSelectedDay(select);
             selected.classList.remove('selected');
             document.querySelector('.td' + select).classList.add('selected');
         }
     }
 
-    function changeSelectDay(day) {
-        setSelectedDay(day);
-    }
-
     return (
         <StyledCalendarMonth key={'month'}>
             <p>
-                {(today.getFullYear() + (Math.floor((today.getMonth() + currentMonth) / 12))) + '년 ' + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
+                {(today.getFullYear() + (Math.floor((today.getMonth() + monthFromToday) / 12))) + '년 ' + (currentMonth > 0 ? currentMonth : 12 - ((currentMonth * -1) % 12)) + '월'}
             </p>
             <div>
-                <button className='PrevMonthBtn' onClick={() => monthOnClick(false)}><i className="fa-solid fa-chevron-left"></i></button>
-                <button className='NextMonthBtn' onClick={() => monthOnClick(true)}><i className="fa-solid fa-chevron-right"></i></button>
+                <button className='PrevMonthBtn' onClick={() => handleMonthClick(false)}><i className="fa-solid fa-chevron-left"></i></button>
+                <button className='NextMonthBtn' onClick={() => handleMonthClick(true)}><i className="fa-solid fa-chevron-right"></i></button>
             </div>
         </StyledCalendarMonth>
     )
