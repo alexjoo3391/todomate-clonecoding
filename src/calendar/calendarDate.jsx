@@ -1,5 +1,7 @@
 import {useRecoilState} from 'recoil'
 import {DayBox, SelectedDay, Table, Td, Thead} from "../styles/style.js";
+import {DateService} from "./services/dateService.js";
+import {DiaryService} from "./services/diaryService.js";
 
 // 달력 표시
 export default function CalendarDate({today, changeDayEventListener, sessionTodoItemList = {}, monthFromToday, selectedDay, calendarMode}) {
@@ -21,18 +23,17 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
             let emoji = '🫥';
             isExist = false;
             diaryDay = false;
-            const classes = `${selectedDay && selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && monthFromToday === today.getMonth() - today.getMonth() ? 'today' : ''}`
+            const classes = `${selectedDay && parseInt(selectedDay) === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && monthFromToday === today.getMonth() - today.getMonth() ? 'today' : ''}`
 
             const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, i * 7 + j - weekDay + 1);
-            const dayString = date.getFullYear().toString()
-                + (('0' + (date.getMonth() + 1)).slice(-2)).toString()
-                + (('0' + date.getDate()).slice(-2)).toString();
+            const diaryService = new DiaryService(date);
 
             let todoCheckCount = 0;
 
             if (i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
                 const todoDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, ((i * 7 + j) - weekDay + 1));
-                const todoDateString = todoDate.getFullYear().toString() + (('0' + (todoDate.getMonth() + 1)).slice(-2)).toString() + (('0' + todoDate.getDate()).slice(-2)).toString();
+                const todoUtil = new DateService(todoDate);
+                const todoDateString = todoUtil.getDayString();
                 todoCount = 0;
                 isExist = false;
                 diaryDay = false;
@@ -59,27 +60,45 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
             }
 
 
-            if(sessionStorage.hasOwnProperty(`diary${dayString}`)) {
-                emoji = JSON.parse(sessionStorage.getItem(`diary${dayString}`))[0];
+            if(diaryService.isDiaryHaveProperty()) {
+                emoji = diaryService.getDiaryValue()[0];
             }
 
             let isDayInMonth = '';
             if(i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
                 isDayInMonth = (
                     <>
-                        {calendarMode === 'todo' ? <DayBox className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</DayBox> : <DayBox className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</DayBox>}
+                        {
+                            calendarMode === 'todo'
+                                ? <DayBox className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</DayBox>
+                                : <DayBox className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</DayBox>
+                        }
                         <SelectedDay className={classes}><p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p></SelectedDay>
                     </>
                 );
             }
 
             week.push(
-                <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => changeDayEventListener(e)}>
+                <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => changeDay(e)}>
                     {isDayInMonth}
                 </Td>
             );
         }
         days.push(<tr key={`tr${i}`}>{week}</tr>);
+
+        function changeDay(e) {
+            let day = ''
+            if (e.target.nodeName === 'DIV') {
+                day = e.target.id;
+            } else if (e.target.innerText !== '' && e.target.nodeName === 'P') {
+                day = e.target.innerText;
+            }
+
+            if(day !== '') {
+                changeDayEventListener(day);
+            }
+        }
+
     }
 
     return (

@@ -7,8 +7,9 @@ import {
     DiaryModalContainer,
     NormalEmoji, StyledUtilModal, UtilModalContainer
 } from "../styles/style.js";
-import {Util} from "./util.js";
+import {DateService} from "./services/dateService.js";
 import {emojiList} from "./constant.js";
+import {DiaryService} from "./services/diaryService.js";
 
 export default function Diary({day, monthFromToday, closeDiary, confirmDiary, removeDiary, isModal, utilModalShow, setUtilModalShow, setDiaryModalOpen}) {
 
@@ -20,18 +21,17 @@ export default function Diary({day, monthFromToday, closeDiary, confirmDiary, re
     const today = new Date()
     const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, parseInt(day));
 
-    const util = new Util(date);
-    const dayString = util.getDayString();
+    const diaryService = new DiaryService(date);
 
-    let weekDay = util.getWeekDay();
+    let weekDay = diaryService.getWeekDay();
 
     let diaryValue = '';
     let diaryEmojiValue = currentEmoji;
 
 
-    if(sessionStorage.hasOwnProperty(`diary${dayString}`) && currentEmoji === '🫥') {
-        diaryEmojiValue = JSON.parse(sessionStorage.getItem(`diary${dayString}`))[0];
-        diaryValue = JSON.parse(sessionStorage.getItem(`diary${dayString}`))[1];
+    if(diaryService.isDiaryHaveProperty() && currentEmoji === '🫥') {
+        diaryEmojiValue = diaryService.getDiaryValue()[0];
+        diaryValue = diaryService.getDiaryValue()[1];
     }
 
     return (

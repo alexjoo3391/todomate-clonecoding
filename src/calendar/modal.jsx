@@ -16,7 +16,8 @@ import ModalDate from "./modalDate.jsx";
 import Memo from "./memo.jsx";
 import {useState} from "react";
 import {MemoBox, ModalContainer, ModalMenu, StyledModal} from "../styles/style.js";
-import {Util} from './util.js';
+import {DateService} from './services/dateService.js';
+import {ObjectService} from "./services/objectService.js";
 
 // 모달 표시 
 export default function Modal({monthFromToday, selectedDay}) {
@@ -76,40 +77,38 @@ export default function Modal({monthFromToday, selectedDay}) {
         const selectDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, parseInt(document.querySelector('.selected').innerText));
         const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(e.target.innerText))
 
-        const util = new Util(selectDate);
-        const selectedDateUtil = new Util(selectedDate);
+        const objectService = new ObjectService(selectDate);
+        const selectedObjectService = new ObjectService(selectedDate);
 
-        const selectedDayString = selectedDateUtil.getDayString();
+        const todoValue = objectService.getObjectValue('todo')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
+        const todoCheckValue = objectService.getObjectValue('todoCheck')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
+        const memoValue = objectService.getObjectValue('memo')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
+        const memoCheckValue = objectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
 
-        const todoValue = util.getObjectValue('todo')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
-        const todoCheckValue = util.getObjectValue('todoCheck')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
-        const memoValue = util.getObjectValue('memo')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
-        const memoCheckValue = util.getObjectValue('memoCheck')[modifyingTodoIndex - 1][deletingTodo * -1 - 2];
-
-        const newTodoValue = getArrayIfIsNull(selectedDateUtil.getObjectValue('todo')[modifyingTodoIndex - 1]);
-        const newTodoCheckValue = getArrayIfIsNull(selectedDateUtil.getObjectValue('todoCheck')[modifyingTodoIndex - 1]);
-        const newMemoValue = getArrayIfIsNull(selectedDateUtil.getObjectValue('memo')[modifyingTodoIndex - 1]);
-        const newMemoCheckValue = getArrayIfIsNull(selectedDateUtil.getObjectValue('memoCheck')[modifyingTodoIndex - 1]);
+        const newTodoValue = getArrayIfIsNull(selectedObjectService.getObjectValue('todo')[modifyingTodoIndex - 1]);
+        const newTodoCheckValue = getArrayIfIsNull(selectedObjectService.getObjectValue('todoCheck')[modifyingTodoIndex - 1]);
+        const newMemoValue = getArrayIfIsNull(selectedObjectService.getObjectValue('memo')[modifyingTodoIndex - 1]);
+        const newMemoCheckValue = getArrayIfIsNull(selectedObjectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1]);
 
 
 
-        const todoObject = util.getChangedObject(
-            modifyingTodoIndex,
-            newTodoValue.concat(todoValue),
-            newTodoCheckValue.concat(todoCheckValue),
-            newMemoValue.concat(memoValue),
-            newMemoCheckValue.concat(memoCheckValue)
-        );
+        const todoObject = objectService.getChangedObject({
+            n : modifyingTodoIndex,
+            todoValue : newTodoValue.concat(todoValue),
+            todoCheckValue : newTodoCheckValue.concat(todoCheckValue),
+            memoValue : newMemoValue.concat(memoValue),
+            memoCheckValue : newMemoCheckValue.concat(memoCheckValue)
+        });
 
-        const todoObjectIsOnly = util.getChangedObject( // 바꾸는 날의 일정이 없을 때
-            modifyingTodoIndex,
+        const todoObjectIsOnly = objectService.getChangedObject({ // 바꾸는 날의 일정이 없을 때
+            n : modifyingTodoIndex,
             todoValue,
             todoCheckValue,
             memoValue,
             memoCheckValue
-        );
+        });
 
-        util.setObjectItem(modifyingTodoIndex, selectedDayString, newTodoValue ? JSON.stringify(todoObject[modifyingTodoIndex - 1]) : JSON.stringify(todoObjectIsOnly[modifyingTodoIndex - 1]));
+        selectedObjectService.setObjectItem(modifyingTodoIndex, newTodoValue ? JSON.stringify(todoObject[modifyingTodoIndex - 1]) : JSON.stringify(todoObjectIsOnly[modifyingTodoIndex - 1]));
         modalDelete();
         setTodoChangeDay(false);
     }
@@ -118,21 +117,21 @@ export default function Modal({monthFromToday, selectedDay}) {
         const memoValueString = formValue;
         if(memoValueString !== '') {
             const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, selectedDay);
-            const util = new Util(selectedDate);
-            const selectedDayString = util.getDayString();
+            const objectService = new ObjectService(selectedDate);
 
-            const memoValue = util.getObjectValue('memo')[modifyingTodoIndex - 1];
-            const memoCheckValue = util.getObjectValue('memoCheck')[modifyingTodoIndex - 1];
+            const memoValue = objectService.getObjectValue('memo')[modifyingTodoIndex - 1];
+            const memoCheckValue = objectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1];
 
-            const objectValue = util.getChangedObject(
-                modifyingTodoIndex,
-                null,
-                null,
-                memoValue.slice(0, isModalOpen).concat(memoValueString, memoValue.slice(isModalOpen + 1)),
-                memoCheckValue.slice(0, isModalOpen).concat(1, memoCheckValue.slice(isModalOpen + 1))
-            )
+            const objectValue = objectService.getChangedObject({
+                n : modifyingTodoIndex,
+                todoValue : null,
+                todoCheckValue : null,
+                memoValue : memoValue.slice(0, isModalOpen).concat(memoValueString, memoValue.slice(isModalOpen + 1)),
+                memoCheckValue : memoCheckValue.slice(0, isModalOpen).concat(1, memoCheckValue.slice(isModalOpen + 1))
+            })
+            console.log(objectValue);
 
-            util.setObjectItem(modifyingTodoIndex, selectedDayString, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
+            objectService.setObjectItem(modifyingTodoIndex, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
         }
         setTodoMemo(false);
         setIsModalOpen(-1);
@@ -144,40 +143,30 @@ export default function Modal({monthFromToday, selectedDay}) {
 
     function memoDelete() {
         const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(document.querySelector('.selected').innerText));
-        const util = new Util(selectedDate);
-        const selectedDayString = util.getDayString();
+        const objectService = new ObjectService(selectedDate);
+        const selectedDayString = objectService.getDayString();
 
 
-        const memoValue = util.getObjectValue('memo')[modifyingTodoIndex - 1];
-        const memoCheckValue = util.getObjectValue('memoCheck')[modifyingTodoIndex - 1];
+        const memoValue = objectService.getObjectValue('memo')[modifyingTodoIndex - 1];
+        const memoCheckValue = objectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1];
 
-        const objectValue = util.getChangedObject(
-            modifyingTodoIndex,
-            null,
-            null,
-            memoValue.slice(0, isModalOpen).concat(0, memoValue.slice(isModalOpen + 1)),
-            memoCheckValue.slice(0, isModalOpen).concat(0, memoCheckValue.slice(isModalOpen + 1))
-        )
+        const objectValue = objectService.getChangedObject({
+            n : modifyingTodoIndex,
+            todoValue : null,
+            todoCheckValue : null,
+            memoValue : memoValue.slice(0, isModalOpen).concat(0, memoValue.slice(isModalOpen + 1)),
+            memoCheckValue : memoCheckValue.slice(0, isModalOpen).concat(0, memoCheckValue.slice(isModalOpen + 1))
+        })
 
-        util.setObjectItem(modifyingTodoIndex, selectedDayString, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
+        objectService.setObjectItem(modifyingTodoIndex, selectedDayString, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
 
         setTodoMemo(false);
         setIsModalOpen(-1);
-        setTodoMemoValue(util.getObjectValue('memo')[modifyingTodoIndex]);
+        setTodoMemoValue(objectService.getObjectValue('memo')[modifyingTodoIndex]);
     }
 
     const today = new Date();
-
-    let memoShow = '';
     const memoModalValue = isModalOpen !== -1 && todoMemoValue[isModalOpen] ? todoMemoValue[isModalOpen] : null;
-    if(memoModalValue !== null) {
-        memoShow = (
-            <MemoBox>
-                {memoModalValue}
-            </MemoBox>
-        );
-
-    }
 
     const modal = todoChangeDay
         ? <StyledModal>
@@ -196,7 +185,7 @@ export default function Modal({monthFromToday, selectedDay}) {
                 </ModalMenu>
                 <button onClick={modalChangeDay}><div><i className="fa-solid fa-arrow-turn-down"></i></div>날짜 바꾸기</button>
                 <button onClick={modalMemo}><div><i className="fa-regular fa-square-minus"></i></div>메모</button>
-                {memoShow}
+                <MemoShow memoModalValue={memoModalValue}/>
             </StyledModal>
         </>
 
@@ -205,4 +194,18 @@ export default function Modal({monthFromToday, selectedDay}) {
             {modal}
         </ModalContainer>
     );
+}
+
+function MemoShow({memoModalValue}) {
+    let memoShow = '';
+    if(memoModalValue !== null) {
+        memoShow = (
+            <MemoBox>
+                {memoModalValue}
+            </MemoBox>
+        );
+
+    }
+
+    return memoShow;
 }

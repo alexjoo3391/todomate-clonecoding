@@ -29,16 +29,16 @@ export default function ModalDate({today, tdEventListener, todoItems = [], modal
     }
 
     return (
-        <ModalTable key={'date'}>
+        <ModalTable>
             <thead>
-            <tr key={'trh'}>
-                <th key={'h0'}>월</th>
-                <th key={'h1'}>화</th>
-                <th key={'h2'}>수</th>
-                <th key={'h3'}>목</th>
-                <th key={'h4'}>금</th>
-                <th key={'h5'}>토</th>
-                <th key={'h6'}>일</th>
+            <tr>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+                <th>토</th>
+                <th>일</th>
             </tr>
             </thead>
             <tbody>
