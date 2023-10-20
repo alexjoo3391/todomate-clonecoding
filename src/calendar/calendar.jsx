@@ -5,7 +5,7 @@ import Todo from "./todo";
 
 import Modal from "./modal";
 
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 
 import {deleteStateAtom, isModalOpenAtom, modifyStateAtom} from "./atoms.js";
 import {useRecoilState} from 'recoil'
@@ -17,7 +17,6 @@ import {
     Radio,
     RadioList
 } from "../styles/style.js";
-import {DateService} from "./services/dateService.js";
 import {DiaryService} from "./services/diaryService.js";
 
 const calendarModeEnum = {
@@ -25,8 +24,9 @@ const calendarModeEnum = {
     DIARY: "diary",
 }
 Object.freeze(calendarModeEnum);
-export default function Calendar() {
 
+
+export default function Calendar() {
 
     const today = new Date();
     const [monthFromToday, setMonthFromToday] = useState(0);
@@ -44,6 +44,12 @@ export default function Calendar() {
     const [utilModalShow, setUtilModalShow] = useState(false);
     const selectedDateRef = useRef(today.getDate());
 
+    useEffect(() => {
+        if(deletingTodo === -1 || modifyingTodo === -1 || isModalOpen === -1) {
+            setSessionTodoItemList({...sessionStorage});
+        }
+    }, [deletingTodo, modifyingTodo]);
+
     function changeDayEventListener(day, selected, dayDOM, dayEmoji) {
         if(calendarMode === calendarModeEnum.TODO) {
             if (selected && selectedDay !== day) {
@@ -51,7 +57,7 @@ export default function Calendar() {
             }
             setSelectedDay(day);
             dayDOM.parentNode.classList.add('selected')
-            
+
         } else {
             if(dayEmoji !== '🫥') {
                 setDiaryModalOpen(true);
@@ -68,8 +74,6 @@ export default function Calendar() {
 
     function reloadSessionTodoItemList() {
         setSessionTodoItemList({...sessionStorage});
-        setDeletingTodo(-1);
-        setModifyingTodo(-1);
     }
 
     function todoModeCheck(e) {
@@ -137,7 +141,7 @@ export default function Calendar() {
             <CalendarTodo>
                 <Todo today={today} reloadSessionTodoItemList={reloadSessionTodoItemList} toggleModal={(n) => setIsModalOpen(n)} monthFromToday={monthFromToday} selectedDay={selectedDay}/>
             </CalendarTodo>
-            <Modal monthFromToday={monthFromToday} selectedDay={selectedDay}/>
+            <Modal monthFromToday={monthFromToday} selectedDay={selectedDay} selectedDateRef={selectedDateRef}/>
             {isDiaryModalOpen}
         </>
 }

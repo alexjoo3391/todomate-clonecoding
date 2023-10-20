@@ -1,85 +1,32 @@
 import {useRecoilState} from 'recoil'
 import {DayBox, SelectedDay, Table, Td, Thead} from "../styles/style.js";
-import {DateService} from "./services/dateService.js";
+import {DateService} from "./services/dateService.jsx";
 import {DiaryService} from "./services/diaryService.js";
 
 // 달력 표시
 export default function CalendarDate({today, changeDayEventListener, sessionTodoItemList = {}, monthFromToday, selectedDay, calendarMode, selectedDateRef}) {
 
-    let todoCount = 0;
-    let isExist = false;
-    let diaryDay = false;
-    let isToday = false;
+    const dateService = new DateService(today);
 
-    const firstDay = new Date(today.getFullYear(), today.getMonth() + monthFromToday, 1);
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + monthFromToday + 1, 0);
-    const weekDay = (firstDay.getDay() ? firstDay.getDay() : 7);
-    const weeks = Math.ceil((weekDay + lastDay.getDate() - 1) / 7);
+    function dayRender(i, j, weekDay, lastDay) {
+        let todoCount = 0;
+        let isExist = false;
+        let diaryDay = false;
+        let isToday = false;
+        let emoji = '🫥';
 
-    const days = [];
-    for (let i = 0; i < weeks; i++) {
-        let week = [];
-        for (let j = 1; j <= 7; j++) {
-            let emoji = '🫥';
-            isExist = false;
-            diaryDay = false;
+        const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, i * 7 + j - weekDay + 1);
+        const diaryService = new DiaryService(date);
 
-            const date = new Date(today.getFullYear(), today.getMonth() + monthFromToday, i * 7 + j - weekDay + 1);
-            const diaryService = new DiaryService(date);
+        let todoCheckCount = 0;
 
-            let todoCheckCount = 0;
-
-            if(diaryService.isDiaryHaveProperty()) {
-                emoji = diaryService.getDiaryValue()[0];
-            }
-
-            week.push(
-                <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => changeDay(e)}>
-                    <DayInMonth i={i} j={j} selectedDay={selectedDay} weekDay={weekDay} today={today} monthFromToday={monthFromToday} lastDay={lastDay} todoCount={todoCount} isExist={isExist} diaryDay={diaryDay} isToday={isToday} sessionTodoItemList={sessionTodoItemList} calendarMode={calendarMode} todoCheckCount={todoCheckCount} emoji={emoji}/>
-                </Td>
-            );
-        }
-        days.push(<tr key={`tr${i}`}>{week}</tr>);
-
-        function changeDay(e) {
-            let day = ''
-            let selected = null;
-            let dayDOM = null;
-            let dayEmoji = '🫥';
-
-            if (e.target.nodeName === 'DIV') {
-                day = e.target.id;
-            } else if (e.target.innerText !== '' && e.target.nodeName === 'P') {
-                day = e.target.innerText;
-            }
-
-            const tbody = selectedDateRef.current.children;
-            for(let i = 0; i < tbody.length; i++) {
-                for(let j = 0; j < 6; j++) {
-                    const td = tbody[i].children[j];
-
-                    if(td.children.length > 0) {
-                        if(td.children[0].id === day) {
-                            dayEmoji = td.children[0].innerText;
-                        }
-                        if(td.children[1].classList.contains('selected')) {
-                            selected = td.children[1];
-                        }
-                        if(td.classList.contains(`td${day}`)) {
-                            dayDOM = td.children[1].children[0];
-                        }
-                    }
-                }
-            }
-
-            if(day !== '') {
-                changeDayEventListener(day, selected, dayDOM, dayEmoji);
-            }
-
-
+        if(diaryService.isDiaryHaveProperty()) {
+            emoji = diaryService.getDiaryValue()[0];
         }
 
+        return <DayInMonth i={i} j={j} selectedDay={selectedDay} weekDay={weekDay} today={today} monthFromToday={monthFromToday} lastDay={lastDay} todoCount={todoCount} isExist={isExist} diaryDay={diaryDay} isToday={isToday} sessionTodoItemList={sessionTodoItemList} calendarMode={calendarMode} todoCheckCount={todoCheckCount} emoji={emoji}/>
     }
+
 
     return (
         <Table>
@@ -95,7 +42,7 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
             </tr>
             </Thead>
             <tbody ref={selectedDateRef}>
-            {days}
+            {dateService.getCalendarFormat({monthFromToday, selectedDateRef, changeDayEventListener, dayRender, isModal : false})}
             </tbody>
         </Table>
     )
@@ -125,10 +72,10 @@ function DayInMonth({i, j, selectedDay, weekDay, today, monthFromToday, lastDay,
             }
         }
         today.setHours(0,0,0,0);
-        if(todoDate <= today) {
+        if(todoUtil.dateDiff(todoDate, today) >= 0) {
             diaryDay = true;
         }
-        if(todoDate.valueOf() === today.valueOf()) {
+        if(todoUtil.dateDiff(todoDate, today) === 0) {
             isToday = true;
         }
     }

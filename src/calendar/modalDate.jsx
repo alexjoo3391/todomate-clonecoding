@@ -1,31 +1,16 @@
 
 // 달력 표시
 import {ModalTable, Table} from "../styles/style.js";
+import {DateService} from "./services/dateService.jsx";
 
-export default function ModalDate({today, tdEventListener, todoItems = [], modalMonthFromToday}) {
+export default function ModalDate({today, changeDayEventListener, todoItems = [], modalMonthFromToday, selectedDateRef}) {
 
-    const firstDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, 1);
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday + 1, 0);
-    const weekDay = (firstDay.getDay() ? firstDay.getDay() : 7);
-    const weeks = Math.ceil((weekDay + lastDay.getDate() - 1) / 7);
+    const dateService = new DateService(today);
 
-    const selectDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(document.querySelector('.selected').innerText)).getDate();
-
-    const days = [];
-    for (let i = 0; i < weeks; i++) {
-        let week = [];
-        for (let j = 1; j <= 7; j++) {
-            const classes = `${selectDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''}`
-
-            week.push(
-                <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`}
-                    onClick={(e) => tdEventListener(e)}>
-                    <p className={classes}>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
-
-                </td>
-            );
-        }
-        days.push(<tr key={'tr' + i}>{week}</tr>);
+    function dayRender(i, j, weekDay, lastDay) {
+        const selectedDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(document.querySelector('.selected').innerText)).getDate();
+        const classes = `${selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''}`
+        return <p className={classes}>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
     }
 
     return (
@@ -42,7 +27,7 @@ export default function ModalDate({today, tdEventListener, todoItems = [], modal
             </tr>
             </thead>
             <tbody>
-            {days}
+            {dateService.getCalendarFormat({monthFromToday : modalMonthFromToday, selectedDateRef, changeDayEventListener, dayRender, isModal : true})}
             </tbody>
         </ModalTable>
     )

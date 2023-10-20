@@ -203,7 +203,6 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, mon
             memoCheckValue : null
         });
         objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
-        reloadSessionTodoItemList();
     }
 
     function modifyingTodoInput() {
@@ -237,8 +236,6 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, mon
         } else {
             objectService.removeObjectItem(n);
         }
-
-        reloadSessionTodoItemList();
     }
 
     useEffect(() => {

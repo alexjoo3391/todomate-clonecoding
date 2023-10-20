@@ -19,7 +19,7 @@ import {MemoBox, ModalContainer, ModalMenu, StyledModal} from "../styles/style.j
 import {ObjectService} from "./services/objectService.js";
 
 // 모달 표시 
-export default function Modal({monthFromToday, selectedDay}) {
+export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
 
     const [modifyingTodo, setModifyingTodo] = useRecoilState(modifyStateAtom);
     const [deletingTodo, setDeletingTodo] = useRecoilState(deleteStateAtom);
@@ -72,7 +72,7 @@ export default function Modal({monthFromToday, selectedDay}) {
         return value;
     }
 
-    function tdEventListener(e) {
+    function changeDayEventListener(e) {
         const selectDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, parseInt(document.querySelector('.selected').innerText));
         const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(e.target.innerText))
 
@@ -170,7 +170,7 @@ export default function Modal({monthFromToday, selectedDay}) {
     const modal = todoChangeDay
         ? <StyledModal>
             <ModalMonth today={today} modalMonthFromToday={modalMonthFromToday} setModalMonthFromToday={setModalMonth}/>
-            <ModalDate today={today} tdEventListener={tdEventListener} modalMonthFromToday={modalMonthFromToday}/>
+            <ModalDate today={today} changeDayEventListener={changeDayEventListener} modalMonthFromToday={modalMonthFromToday} selectedDateRef={selectedDateRef}/>
         </StyledModal>
         : todoMemo
         ? <StyledModal>

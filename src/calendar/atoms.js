@@ -4,11 +4,29 @@ import {atom} from 'recoil'
 export const deleteStateAtom = atom({
     key: 'deleteState',
     default: -1,
+    effects: [
+        ({ setSelf, onSet }) => {
+            onSet((newValue, oldValue) => {
+                if(newValue > 0) {
+                    setSelf(-1);
+                }
+            })
+        }
+    ]
 });
 
 export const modifyStateAtom = atom({
     key: 'modifyState',
     default: -1,
+    effects: [
+        ({ setSelf, onSet }) => {
+            onSet(newValue => {
+                if(newValue > 0) {
+                    setSelf(-1);
+                }
+            })
+        }
+    ]
 });
 
 export const modifyingTodoInputDisplayAtom = atom({

@@ -1,4 +1,4 @@
-import {DateService} from "./dateService.js";
+import {DateService} from "./dateService.jsx";
 
 export class DiaryService extends DateService {
 
