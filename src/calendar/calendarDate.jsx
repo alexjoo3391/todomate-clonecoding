@@ -43,15 +43,40 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
 
         function changeDay(e) {
             let day = ''
+            let selected = null;
+            let dayDOM = null;
+            let dayEmoji = '🫥';
+
             if (e.target.nodeName === 'DIV') {
                 day = e.target.id;
             } else if (e.target.innerText !== '' && e.target.nodeName === 'P') {
                 day = e.target.innerText;
             }
 
-            if(day !== '') {
-                changeDayEventListener(day);
+            const tbody = selectedDateRef.current.children;
+            for(let i = 0; i < tbody.length; i++) {
+                for(let j = 0; j < 6; j++) {
+                    const td = tbody[i].children[j];
+
+                    if(td.children.length > 0) {
+                        if(td.children[0].id === day) {
+                            dayEmoji = td.children[0].innerText;
+                        }
+                        if(td.children[1].classList.contains('selected')) {
+                            selected = td.children[1];
+                        }
+                        if(td.classList.contains(`td${day}`)) {
+                            dayDOM = td.children[1].children[0];
+                        }
+                    }
+                }
             }
+
+            if(day !== '') {
+                changeDayEventListener(day, selected, dayDOM, dayEmoji);
+            }
+
+
         }
 
     }

@@ -44,38 +44,14 @@ export default function Calendar() {
     const [utilModalShow, setUtilModalShow] = useState(false);
     const selectedDateRef = useRef(today.getDate());
 
-    function changeDayEventListener(day) {
-
-        let selected = null;
-        let dayDOM = null;
-        let dayEmoji = '🫥';
-
-        const tbody = selectedDateRef;
-        for(let i = 0; i < tbody.length; i++) {
-            for(let j = 0; j < 6; j++) {
-                const td = tbody[i].children[j];
-                if(td.classList.contains(`td${day}`)) {
-                    dayDOM = td.children[1].children[0];
-                }
-                if(td.children.length > 0) {
-                    if(td.children[0].id === day) {
-                        dayEmoji = td.children[0].innerText;
-                    }
-                    if(td.children[1].classList.contains('selected')) {
-                        selected = td.children[1];
-                    }
-                }
-            }
-        }
-
+    function changeDayEventListener(day, selected, dayDOM, dayEmoji) {
         if(calendarMode === calendarModeEnum.TODO) {
-
             if (selected && selectedDay !== day) {
                 selected.classList.remove('selected');
             }
             setSelectedDay(day);
             dayDOM.parentNode.classList.add('selected')
-
+            
         } else {
             if(dayEmoji !== '🫥') {
                 setDiaryModalOpen(true);
