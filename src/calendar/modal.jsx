@@ -16,7 +16,6 @@ import ModalDate from "./modalDate.jsx";
 import Memo from "./memo.jsx";
 import {useState} from "react";
 import {MemoBox, ModalContainer, ModalMenu, StyledModal} from "../styles/style.js";
-import {DateService} from './services/dateService.js';
 import {ObjectService} from "./services/objectService.js";
 
 // 모달 표시 

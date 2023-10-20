@@ -7,7 +7,6 @@ import {
     DiaryModalContainer,
     NormalEmoji, StyledUtilModal, UtilModalContainer
 } from "../styles/style.js";
-import {DateService} from "./services/dateService.js";
 import {emojiList} from "./constant.js";
 import {DiaryService} from "./services/diaryService.js";
 

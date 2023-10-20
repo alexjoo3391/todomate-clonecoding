@@ -42,21 +42,42 @@ export default function Calendar() {
     const [editingDiary, setEditingDiary] = useState(0);
 
     const [utilModalShow, setUtilModalShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const selectedDateRef = useRef(today.getDate());
 
     function changeDayEventListener(day) {
+
+        let selected = null;
+        let dayDOM = null;
+        let dayEmoji = '🫥';
+
+        const tbody = selectedDateRef;
+        for(let i = 0; i < tbody.length; i++) {
+            for(let j = 0; j < 6; j++) {
+                const td = tbody[i].children[j];
+                if(td.classList.contains(`td${day}`)) {
+                    dayDOM = td.children[1].children[0];
+                }
+                if(td.children.length > 0) {
+                    if(td.children[0].id === day) {
+                        dayEmoji = td.children[0].innerText;
+                    }
+                    if(td.children[1].classList.contains('selected')) {
+                        selected = td.children[1];
+                    }
+                }
+            }
+        }
+
         if(calendarMode === calendarModeEnum.TODO) {
-            const selected = document.querySelector('.selected');
 
             if (selected && selectedDay !== day) {
                 selected.classList.remove('selected');
             }
             setSelectedDay(day);
-            const dayDOM = document.querySelector(`.td${day} p`);
             dayDOM.parentNode.classList.add('selected')
 
         } else {
-            if(document.getElementById(day).innerText !== '🫥') {
+            if(dayEmoji !== '🫥') {
                 setDiaryModalOpen(true);
             }
 
@@ -129,7 +150,7 @@ export default function Calendar() {
         : <>
             <CalendarMain>
                 <CalendarMonth today={today} monthFromToday={monthFromToday} onCurrentMonthChange={(n) => setMonthFromToday(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
-                <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} monthFromToday={monthFromToday} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}/>
+                <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} monthFromToday={monthFromToday} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary} selectedDateRef={selectedDateRef}/>
                 <RadioList>
                     <Radio>
                         <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>

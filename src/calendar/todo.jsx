@@ -12,7 +12,6 @@ import {
     todoMemoValueAtom,
 } from './atoms.js';
 import {StyledTodo, TextInput, TodoCheck, TodoCheckBox, TodoInput, TodoList, TodoMemo} from "../styles/style.js";
-import {DateService} from './services/dateService.js';
 import {ObjectService} from "./services/objectService.js";
 
 // 목표 리스트 표시
