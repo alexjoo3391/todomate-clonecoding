@@ -7,8 +7,8 @@ import Modal from "./modal";
 
 import {useEffect, useRef, useState} from 'react'
 
-import {deleteStateAtom, isModalOpenAtom, modifyStateAtom} from "./atoms.js";
-import {useRecoilState} from 'recoil'
+import {deleteStateAtom, isModalOpenAtom, modifyingTodoInputDisplayAtom, modifyStateAtom} from "./atoms.js";
+import {useRecoilState, useSetRecoilState} from 'recoil'
 import {
     CalendarMain,
     CalendarTodo,
@@ -44,11 +44,16 @@ export default function Calendar() {
     const [utilModalShow, setUtilModalShow] = useState(false);
     const selectedDateRef = useRef(today.getDate());
 
+    const [modifyingTodoInputDisplay, setModifyingTodoInputDisplay] = useRecoilState(modifyingTodoInputDisplayAtom);
+
+    const [todoInputValue, setTodoInputValue] = useState('');
+    const [todoCheckValue, setTodoCheckValue] = useState([]);
+
     useEffect(() => {
-        if(deletingTodo === -1 || modifyingTodo === -1 || isModalOpen === -1) {
+        if(deletingTodo === -1 || modifyingTodo === -1 || isModalOpen === -1 || modifyingTodoInputDisplay === [false, false, false] || todoInputValue === '') {
             setSessionTodoItemList({...sessionStorage});
         }
-    }, [deletingTodo, modifyingTodo]);
+    }, [deletingTodo, modifyingTodo, JSON.stringify(modifyingTodoInputDisplay), todoInputValue, todoCheckValue]);
 
     function changeDayEventListener(day, selected, dayDOM, dayEmoji) {
         if(calendarMode === calendarModeEnum.TODO) {
@@ -72,9 +77,6 @@ export default function Calendar() {
         }
     }
 
-    function reloadSessionTodoItemList() {
-        setSessionTodoItemList({...sessionStorage});
-    }
 
     function todoModeCheck(e) {
         if(e.target.value === 'on') {
@@ -139,7 +141,7 @@ export default function Calendar() {
                 </RadioList>
             </CalendarMain>
             <CalendarTodo>
-                <Todo today={today} reloadSessionTodoItemList={reloadSessionTodoItemList} toggleModal={(n) => setIsModalOpen(n)} monthFromToday={monthFromToday} selectedDay={selectedDay}/>
+                <Todo today={today} toggleModal={(n) => setIsModalOpen(n)} monthFromToday={monthFromToday} selectedDay={selectedDay} todoInputValue={todoInputValue} setTodoInputValue={setTodoInputValue} setTodoCheckValue={setTodoCheckValue}/>
             </CalendarTodo>
             <Modal monthFromToday={monthFromToday} selectedDay={selectedDay} selectedDateRef={selectedDateRef}/>
             {isDiaryModalOpen}

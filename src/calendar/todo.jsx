@@ -15,7 +15,7 @@ import {StyledTodo, TextInput, TodoCheck, TodoCheckBox, TodoInput, TodoList, Tod
 import {ObjectService} from "./services/objectService.js";
 
 // 목표 리스트 표시
-export default function Todo({today, reloadSessionTodoItemList, toggleModal, monthFromToday, selectedDay}) {
+export default function Todo({today, toggleModal, monthFromToday, selectedDay, todoInputValue, setTodoInputValue, setTodoCheckValue}) {
 
     const selectedDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, selectedDay);
     const objectService = new ObjectService(selectedDate);
@@ -34,14 +34,13 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, mon
     const setTodoMemo = useSetRecoilState(todoMemoAtom);
     const setTodoMemoValue = useSetRecoilState(todoMemoValueAtom);
 
-
-
     const newTodo = objectService.getObjectValue('todo');
     const newTodoCheck = objectService.getObjectValue('todoCheck');
     const newTodoMemo = objectService.getObjectValue('memo');
     const newTodoMemoCheck = objectService.getObjectValue('memoCheck');
 
     function enterCheck(e, func) {
+        setTodoInputValue(e.target.value);
         if (e.key === 'Enter') {
             func();
         }
@@ -129,7 +128,7 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, mon
 
 
     function todoInputClick(n) {
-        const val = encodeURI(document.querySelector(`.todoInput${n} input`).value);
+        const val = todoInputValue;
 
         objectService.setObjectItem(n, newTodo[n - 1]
             ? JSON.stringify({
@@ -146,8 +145,7 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, mon
             })
         )
 
-        document.querySelector('.display input').value = '';
-        reloadSessionTodoItemList();
+        setTodoInputValue('');
     }
 
     function todoSetting(n, i) {
@@ -187,8 +185,7 @@ export default function Todo({today, reloadSessionTodoItemList, toggleModal, mon
             memoValue : null,
             memoCheckValue : null
         });
-        objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
-        reloadSessionTodoItemList();
+        setTodoCheckValue(newTodoCheck);
     }
 
     function modifyingTodoConfirm(n, i) {
