@@ -39,7 +39,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
     const newTodoMemo = objectService.getObjectValue('memo');
     const newTodoMemoCheck = objectService.getObjectValue('memoCheck');
 
-    function enterCheck(e, func) {
+    function checkEnter(e, func) {
         setTodoInputValue(e.target.value);
         if (e.key === 'Enter') {
             func();
@@ -56,10 +56,10 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
                 let modifyInput = '';
                 let selectModifyingTodoInput = n === 1 ? modifyingTodoInputDisplay[0] : n === 2 ? modifyingTodoInputDisplay[1] : modifyingTodoInputDisplay[2];
                 if (modifyingTodo === i && selectModifyingTodoInput) {
-                    modifyingTodoInput()
-                    modifyInput = <TextInput className='modifyingTodoInput' type='text' defaultValue={arr[i]}
+                    modifyTodoInput()
+                    modifyInput = <TextInput className='modifyTodoInput' type='text' defaultValue={arr[i]}
                                          onClick={(e) => e.stopPropagation()}
-                                         onKeyUp={(e) => enterCheck(e, () => modifyingTodoConfirm(n, i))}/>;
+                                         onKeyUp={(e) => checkEnter(e, () => confirmModifyingTodo(n, i))}/>;
                 }
 
                 const todoContent = modifyInput
@@ -67,7 +67,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
                     : <p key={`todoArr${n}${i}`}>{arr[i]}</p>
 
                 const modifyingTodoButton = modifyInput
-                    ? <button onClick={() => modifyingTodoConfirm(n, i)}>+</button>
+                    ? <button onClick={() => confirmModifyingTodo(n, i)}>+</button>
                     : <button key={`todoButton${n}${i}`} onClick={() => todoSetting(n, i)}>...</button>;
 
                 let todoMemo = '';
@@ -109,7 +109,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
         todoExtend.push(
             <TodoInput className={`todoInput${n} ${selectedInputDisplay ? 'display' : ''}`}
                  onClick={(e) => e.stopPropagation()}>
-                <TextInput type="text" onKeyUp={(e) => enterCheck(e, () => todoInputClick(n))}/>
+                <TextInput type="text" onKeyUp={(e) => checkEnter(e, () => todoInputClick(n))}/>
                 <button onClick={() => todoInputClick(n)}>+</button>
             </TodoInput>
         );
@@ -185,11 +185,12 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
             memoValue : null,
             memoCheckValue : null
         });
-        setTodoCheckValue(newTodoCheck);
+        objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
+        setTodoCheckValue(todoObject);
     }
 
-    function modifyingTodoConfirm(n, i) {
-        const value = document.querySelector('.modifyingTodoInput').value;
+    function confirmModifyingTodo(n, i) {
+        const value = document.querySelector('.modifyTodoInput').value;
         const sessionValue = objectService.getObjectValue('todo')[n - 1];
         const newTodoValue = sessionValue.slice(0, i).concat(value, sessionValue.slice(i + 1));
         const todoObject = objectService.getChangedObject({
@@ -202,13 +203,13 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
         objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
     }
 
-    function modifyingTodoInput() {
+    function modifyTodoInput() {
         document.addEventListener('click', () => {
             setModifyingTodoInputDisplay([false, false, false]);
         })
     }
 
-    function deletingTodoConfirm(n, i) {
+    function deleteTodoInput(n, i) {
 
         const sessionTodo = objectService.getObjectValue('todo')[n - 1];
         const sessionTodoCheck = objectService.getObjectValue('todoCheck')[n - 1];
@@ -237,7 +238,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
 
     useEffect(() => {
         if (deletingTodo > -1) {
-            deletingTodoConfirm(deletingTodoIndex, deletingTodo);
+            deleteTodoInput(deletingTodoIndex, deletingTodo);
         }
     }, [deletingTodo]);
 

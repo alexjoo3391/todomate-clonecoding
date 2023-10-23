@@ -7,8 +7,8 @@ export default function ModalDate({today, changeDayEventListener, todoItems = []
 
     const dateService = new DateService(today);
 
-    function dayRender(i, j, weekDay, lastDay) {
-        const selectedDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(document.querySelector('.selected').innerText)).getDate();
+    function renderDay(i, j, weekDay, lastDay) {
+        const selectedDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, dateService.getTdObject(null, selectedDateRef)['selected'].innerText).getDate();
         const classes = `${selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''}`
         return <p className={classes}>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
     }
@@ -27,7 +27,7 @@ export default function ModalDate({today, changeDayEventListener, todoItems = []
             </tr>
             </thead>
             <tbody>
-            {dateService.getCalendarFormat({monthFromToday : modalMonthFromToday, selectedDateRef, changeDayEventListener, dayRender, isModal : true})}
+            {dateService.getCalendarFormat({monthFromToday : modalMonthFromToday, selectedDateRef, changeDayEventListener, renderDay, isModal : true})}
             </tbody>
         </ModalTable>
     )

@@ -1,25 +1,28 @@
-import {useRecoilState} from 'recoil'
 import {StyledCalendarMonth} from "../styles/style.js";
+import {DateService} from "./services/dateService.jsx";
 
 // 상단 년,월 표시
-export default function CalendarMonth({today, monthFromToday, onCurrentMonthChange, setSelectedDay}) {
+export default function CalendarMonth({today, monthFromToday, onCurrentMonthChange, setSelectedDay, selectedDateRef}) {
 
     const currentMonth = (today.getMonth() + monthFromToday) % 12 + 1;
+    const dateService = new DateService(today);
 
     function handleMonthClick(isNext) {
         let select;
         if (isNext) {
-            select = 1;
+            select = '1';
             onCurrentMonthChange(monthFromToday + 1);
         } else {
-            select = new Date(today.getFullYear(), today.getMonth() + monthFromToday, 0).getDate();
+            select = `${new Date(today.getFullYear(), today.getMonth() + monthFromToday, 0).getDate()}`;
             onCurrentMonthChange(monthFromToday - 1);
         }
-        const selected = document.querySelector('.selected');
+        const tdObject = dateService.getTdObject(select, selectedDateRef);
+        const selected = tdObject['selected'];
+        const dayDOM = tdObject['dayDOM'];
         if (selected) {
             setSelectedDay(select);
             selected.classList.remove('selected');
-            document.querySelector('.td' + select).classList.add('selected');
+            dayDOM.classList.add('selected');
         }
     }
 

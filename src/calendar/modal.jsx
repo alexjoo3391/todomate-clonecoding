@@ -17,6 +17,7 @@ import Memo from "./memo.jsx";
 import {useState} from "react";
 import {MemoBox, ModalContainer, ModalMenu, StyledModal} from "../styles/style.js";
 import {ObjectService} from "./services/objectService.js";
+import {DateService} from "./services/dateService.jsx";
 
 // 모달 표시 
 export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
@@ -73,7 +74,10 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
     }
 
     function changeDayEventListener(e) {
-        const selectDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, parseInt(document.querySelector('.selected').innerText));
+
+        const dateService = new DateService(today);
+
+        const selectDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, dateService.getTdObject(null, selectedDateRef)['selected'].innerText);
         const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(e.target.innerText))
 
         const objectService = new ObjectService(selectDate);
@@ -112,7 +116,7 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
         setTodoChangeDay(false);
     }
 
-    function memoConfirm(formValue) {
+    function confirmMemo(formValue) {
         const memoValueString = formValue;
         if(memoValueString !== '') {
             const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, selectedDay);
@@ -128,7 +132,6 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
                 memoValue : memoValue.slice(0, isModalOpen).concat(memoValueString, memoValue.slice(isModalOpen + 1)),
                 memoCheckValue : memoCheckValue.slice(0, isModalOpen).concat(1, memoCheckValue.slice(isModalOpen + 1))
             })
-            console.log(objectValue);
 
             objectService.setObjectItem(modifyingTodoIndex, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
         }
@@ -140,8 +143,11 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
         setModalMonthFromToday(n);
     }
 
-    function memoDelete() {
-        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, parseInt(document.querySelector('.selected').innerText));
+    function deleteMemo() {
+
+        const dateService = new DateService(today);
+
+        const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, dateService.getTdObject(null, selectedDateRef)['selected'].innerText);
         const objectService = new ObjectService(selectedDate);
         const selectedDayString = objectService.getDayString();
 
@@ -157,15 +163,15 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
             memoCheckValue : memoCheckValue.slice(0, isModalOpen).concat(0, memoCheckValue.slice(isModalOpen + 1))
         })
 
-        objectService.setObjectItem(modifyingTodoIndex, selectedDayString, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
+        objectService.setObjectItem(modifyingTodoIndex, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
 
         setTodoMemo(false);
         setIsModalOpen(-1);
-        setTodoMemoValue(objectService.getObjectValue('memo')[modifyingTodoIndex]);
+        setTodoMemoValue(objectService.getObjectValue('memo')[modifyingTodoIndex - 1]);
     }
 
     const today = new Date();
-    const memoModalValue = isModalOpen !== -1 && todoMemoValue[isModalOpen] ? todoMemoValue[isModalOpen] : null;
+    const memoModalValue = isModalOpen !== -1 ? todoMemoValue[isModalOpen] ? todoMemoValue[isModalOpen] : null : null;
 
     const modal = todoChangeDay
         ? <StyledModal>
@@ -174,7 +180,7 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
         </StyledModal>
         : todoMemo
         ? <StyledModal>
-            <Memo memoConfirm={memoConfirm} memoDelete={memoDelete} memoModalValue={memoModalValue}/>
+            <Memo confirmMemo={confirmMemo} deleteMemo={deleteMemo} memoModalValue={memoModalValue}/>
         </StyledModal>
         : <>
             <StyledModal className='modal'>

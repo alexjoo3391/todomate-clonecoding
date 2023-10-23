@@ -8,7 +8,7 @@ import Modal from "./modal";
 import {useEffect, useRef, useState} from 'react'
 
 import {deleteStateAtom, isModalOpenAtom, modifyingTodoInputDisplayAtom, modifyStateAtom} from "./atoms.js";
-import {useRecoilState, useSetRecoilState} from 'recoil'
+import {useRecoilState, useRecoilValue} from 'recoil'
 import {
     CalendarMain,
     CalendarTodo,
@@ -34,17 +34,17 @@ export default function Calendar() {
     const [sessionTodoItemList, setSessionTodoItemList] = useState({...sessionStorage});
     const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
 
-    const [deletingTodo, setDeletingTodo] = useRecoilState(deleteStateAtom);
-    const [modifyingTodo, setModifyingTodo] = useRecoilState(modifyStateAtom);
+    const deletingTodo = useRecoilValue(deleteStateAtom);
+    const modifyingTodo= useRecoilValue(modifyStateAtom);
 
     const [diaryModalOpen, setDiaryModalOpen] = useState(false);
-    const [calendarMode, setCalendarMode] = useState(calendarModeEnum.TODO); // todo or diary
+    const [calendarMode, setCalendarMode] = useState(calendarModeEnum.TODO);
     const [editingDiary, setEditingDiary] = useState(0);
 
     const [utilModalShow, setUtilModalShow] = useState(false);
     const selectedDateRef = useRef(today.getDate());
 
-    const [modifyingTodoInputDisplay, setModifyingTodoInputDisplay] = useRecoilState(modifyingTodoInputDisplayAtom);
+    const modifyingTodoInputDisplay = useRecoilValue(modifyingTodoInputDisplayAtom);
 
     const [todoInputValue, setTodoInputValue] = useState('');
     const [todoCheckValue, setTodoCheckValue] = useState([]);
@@ -53,7 +53,7 @@ export default function Calendar() {
         if(deletingTodo === -1 || modifyingTodo === -1 || isModalOpen === -1 || modifyingTodoInputDisplay === [false, false, false] || todoInputValue === '') {
             setSessionTodoItemList({...sessionStorage});
         }
-    }, [deletingTodo, modifyingTodo, JSON.stringify(modifyingTodoInputDisplay), todoInputValue, todoCheckValue]);
+    }, [deletingTodo, modifyingTodo, JSON.stringify(modifyingTodoInputDisplay), todoInputValue, JSON.stringify(todoCheckValue)]);
 
     function changeDayEventListener(day, selected, dayDOM, dayEmoji) {
         if(calendarMode === calendarModeEnum.TODO) {
@@ -78,13 +78,13 @@ export default function Calendar() {
     }
 
 
-    function todoModeCheck(e) {
+    function checkTodoMode(e) {
         if(e.target.value === 'on') {
             setCalendarMode(calendarModeEnum.TODO);
         }
     }
 
-    function diaryModeCheck(e) {
+    function checkDiaryModal(e) {
         if(e.target.value === 'on') {
             setCalendarMode(calendarModeEnum.DIARY);
         }
@@ -131,12 +131,12 @@ export default function Calendar() {
         </>
         : <>
             <CalendarMain>
-                <CalendarMonth today={today} monthFromToday={monthFromToday} onCurrentMonthChange={(n) => setMonthFromToday(n)} setSelectedDay={(n) => setSelectedDay(n)}/>
+                <CalendarMonth today={today} monthFromToday={monthFromToday} onCurrentMonthChange={(n) => setMonthFromToday(n)} setSelectedDay={(n) => setSelectedDay(n)} selectedDateRef={selectedDateRef}/>
                 <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} monthFromToday={monthFromToday} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary} selectedDateRef={selectedDateRef}/>
                 <RadioList>
                     <Radio>
-                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => todoModeCheck(e)} checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>
-                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => diaryModeCheck(e)} checked={calendarMode === calendarModeEnum.DIARY}/><label htmlFor='diaryRadio'>일기</label>
+                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => checkTodoMode(e)} checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>
+                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => checkDiaryModal(e)} checked={calendarMode === calendarModeEnum.DIARY}/><label htmlFor='diaryRadio'>일기</label>
                     </Radio>
                 </RadioList>
             </CalendarMain>

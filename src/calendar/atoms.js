@@ -6,7 +6,7 @@ export const deleteStateAtom = atom({
     default: -1,
     effects: [
         ({ setSelf, onSet }) => {
-            onSet((newValue, oldValue) => {
+            onSet((newValue) => {
                 if(newValue > 0) {
                     setSelf(-1);
                 }

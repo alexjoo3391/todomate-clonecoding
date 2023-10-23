@@ -1,5 +1,4 @@
-import {useRecoilState} from 'recoil'
-import {DayBox, SelectedDay, Table, Td, Thead} from "../styles/style.js";
+import {DayBox, SelectedDay, Table, Thead} from "../styles/style.js";
 import {DateService} from "./services/dateService.jsx";
 import {DiaryService} from "./services/diaryService.js";
 
@@ -8,7 +7,7 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
 
     const dateService = new DateService(today);
 
-    function dayRender(i, j, weekDay, lastDay) {
+    function renderDay(i, j, weekDay, lastDay) {
         let todoCount = 0;
         let isExist = false;
         let diaryDay = false;
@@ -42,7 +41,7 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
             </tr>
             </Thead>
             <tbody ref={selectedDateRef}>
-            {dateService.getCalendarFormat({monthFromToday, selectedDateRef, changeDayEventListener, dayRender, isModal : false})}
+            {dateService.getCalendarFormat({monthFromToday, selectedDateRef, changeDayEventListener, renderDay, isModal : false})}
             </tbody>
         </Table>
     )
