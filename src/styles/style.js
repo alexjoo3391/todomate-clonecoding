@@ -6,11 +6,15 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     user-select: none;
   }
+
+  * button:hover {
+    cursor: pointer;
+  }
 `;
 
 export const StyledCalendar = styled.div`
   padding: 10px;
-  
+
   @media (min-width: 700px) {
     display: flex;
     gap: 50px;
@@ -34,7 +38,7 @@ export const ModalContainer = styled.div`
   background-color: #00000066;
   display: none;
   padding-bottom: 180px;
-  
+
   &.modalShow {
     display: block !important;
   }
@@ -51,10 +55,6 @@ export const StyledCalendarMonth = styled.div`
     width: 20px;
     height: 20px;
   }
-
-  & button:hover {
-    cursor: pointer;
-  }
 `;
 
 export const Table = styled.table`
@@ -63,9 +63,9 @@ export const Table = styled.table`
 `;
 
 export const Thead = styled.thead`
-  
+
   margin-top: 10px;
-  
+
   & th {
     font-size: 10px;
   }
@@ -122,25 +122,25 @@ export const DayBox = styled.div`
   &.dayBoxCheck {
     background-color: black;
   }
-  
+
   &.diary {
     color: transparent;
     text-shadow: 0 0 0 #999999;
   }
-  
+
   &.diaryToday {
     text-shadow: 0 0 0 dodgerblue !important;
   }
 `;
 
 export const SelectedDay = styled.div`
-  &.selected p{
+  &.selected p {
     border-radius: 50%;
     background-color: dodgerblue !important;
     color: white;
   }
-  
-  &.today p{
+
+  &.today p {
     margin: 0 auto;
     width: 20px;
     height: 20px;
@@ -168,6 +168,10 @@ export const Radio = styled.div`
     font-size: 14px;
   }
 
+  & label:hover {
+    cursor: pointer;
+  }
+
   & input {
     margin-top: .5em;
     vertical-align: middle;
@@ -189,10 +193,6 @@ export const StyledTodo = styled.div`
     border: none;
     width: 20px;
     height: 20px;
-  }
-  
-  & > p > button:hover {
-    cursor: pointer;
   }
 
   @media (min-width: 700px) {
@@ -239,10 +239,6 @@ export const TodoCheck = styled.div`
     width: 20px;
     height: 20px;
   }
-
-  & button:hover {
-    cursor: pointer;
-  }
 `;
 
 export const TodoCheckBox = styled.div`
@@ -274,20 +270,20 @@ export const TodoCheckBox = styled.div`
 export const TodoInput = styled.div`
   &.display {
     display: flex !important;
-    
+
     & button {
       background-color: white;
       border: none;
       width: 20px;
       height: 20px;
-      
+
       &:hover {
         cursor: pointer;
       }
     }
-    
+
   }
-  
+
   &.todoInput1, &.todoInput2, &.todoInput3 {
     display: none;
   }
@@ -380,12 +376,12 @@ export const ModalMenu = styled.div`
 export const ModalTable = styled.table`
   text-align: center;
   width: 100%;
-  
+
   & .selected {
     background-color: dodgerblue;
     color: white;
   }
-  
+
   & p {
     font-size: 16px;
     width: 30px;
@@ -393,7 +389,7 @@ export const ModalTable = styled.table`
     line-height: 30px;
     border-radius: 10px;
   }
-  
+
   & td {
     width: 40px;
     height: 40px;
@@ -404,7 +400,7 @@ export const MemoBox = styled.pre`
   padding: 10px;
   background-color: lemonchiffon;
   border-radius: 10px;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -414,13 +410,13 @@ export const MemoMenu = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  
-  & button{
+
+  & button {
     background-color: transparent;
     font-size: 16px;
     display: inline-flex;
   }
-  
+
   & button:first-child {
     color: red;
   }
@@ -454,6 +450,11 @@ export const DiaryModal = styled.div`
   padding: 20px;
   min-height: 350px;
 
+  & table {
+    width: 100%;
+    text-align: center;
+  }
+
   & td {
     font-size: 20px;
   }
@@ -465,15 +466,15 @@ export const DiaryModal = styled.div`
 
 export const DiaryContainer = styled.div`
   padding: 10px;
-  
+
   & > p {
     margin: 10px 0;
   }
-  
+
   & input[type=button]:hover {
     cursor: pointer;
   }
-  
+
   & textarea {
     border: none;
     resize: none;
@@ -484,8 +485,8 @@ export const DiaryContainer = styled.div`
 
 export const DiaryHeader = styled.div`
   display: flex;
-  justify-content: space-between;  
-  
+  justify-content: space-between;
+
   & p {
     font-size: 20px;
   }
@@ -501,12 +502,12 @@ export const DiaryHeader = styled.div`
 export const DiaryEmoji = styled.div`
   margin: 10px 0;
   display: flex;
-  justify-content: center;  
-  
+  justify-content: center;
+
   & p {
     font-size: 40px;
   }
-  
+
   & input {
     font-size: 40px;
     background-color: transparent;
@@ -518,7 +519,7 @@ export const NormalEmoji = styled.input`
   &.emojiNormal {
     color: transparent;
     text-shadow: 0 0 0 dodgerblue;
-  }  
+  }
 `;
 
 export const UtilModalContainer = styled.div`
@@ -528,7 +529,7 @@ export const UtilModalContainer = styled.div`
   width: 100vw;
   height: calc(100% - 180px);
   background-color: #00000011;
-  padding-bottom: 180px;  
+  padding-bottom: 180px;
 `;
 
 export const StyledUtilModal = styled.div`
@@ -538,7 +539,7 @@ export const StyledUtilModal = styled.div`
   bottom: 0;
   transform: translate(-50%, 0);
   padding: 10px;
-  
+
   & input {
     width: 100%;
     height: 60px;
@@ -546,12 +547,12 @@ export const StyledUtilModal = styled.div`
     background-color: #dddddd;
     color: dodgerblue;
     border-radius: 10px;
-    
+
     &:first-child {
       border-radius: 10px 10px 0 0;
       border-bottom: 1px solid #999999;
     }
-    
+
     &:nth-child(2) {
       border-radius: 0 0 10px 10px;
       margin-bottom: 10px;

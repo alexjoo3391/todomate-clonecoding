@@ -5,9 +5,9 @@ export const deleteStateAtom = atom({
     key: 'deleteState',
     default: -1,
     effects: [
-        ({ setSelf, onSet }) => {
+        ({setSelf, onSet}) => {
             onSet((newValue) => {
-                if(newValue > 0) {
+                if (newValue > 0) {
                     setSelf(-1);
                 }
             })
@@ -19,9 +19,9 @@ export const modifyStateAtom = atom({
     key: 'modifyState',
     default: -1,
     effects: [
-        ({ setSelf, onSet }) => {
+        ({setSelf, onSet}) => {
             onSet(newValue => {
-                if(newValue > 0) {
+                if (newValue > 0) {
                     setSelf(-1);
                 }
             })

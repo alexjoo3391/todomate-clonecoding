@@ -35,7 +35,7 @@ export default function Calendar() {
     const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
 
     const deletingTodo = useRecoilValue(deleteStateAtom);
-    const modifyingTodo= useRecoilValue(modifyStateAtom);
+    const modifyingTodo = useRecoilValue(modifyStateAtom);
 
     const [diaryModalOpen, setDiaryModalOpen] = useState(false);
     const [calendarMode, setCalendarMode] = useState(calendarModeEnum.TODO);
@@ -50,13 +50,13 @@ export default function Calendar() {
     const [todoCheckValue, setTodoCheckValue] = useState([]);
 
     useEffect(() => {
-        if(deletingTodo === -1 || modifyingTodo === -1 || isModalOpen === -1 || modifyingTodoInputDisplay === [false, false, false] || todoInputValue === '') {
+        if (deletingTodo === -1 || modifyingTodo === -1 || isModalOpen === -1 || modifyingTodoInputDisplay === [false, false, false] || todoInputValue === '') {
             setSessionTodoItemList({...sessionStorage});
         }
     }, [deletingTodo, modifyingTodo, JSON.stringify(modifyingTodoInputDisplay), todoInputValue, JSON.stringify(todoCheckValue)]);
 
     function changeDayEventListener(day, selected, dayDOM, dayEmoji) {
-        if(calendarMode === calendarModeEnum.TODO) {
+        if (calendarMode === calendarModeEnum.TODO) {
             if (selected && selectedDay !== day) {
                 selected.classList.remove('selected');
             }
@@ -64,12 +64,12 @@ export default function Calendar() {
             dayDOM.parentNode.classList.add('selected')
 
         } else {
-            if(dayEmoji !== '🫥') {
+            if (dayEmoji !== '🫥') {
                 setDiaryModalOpen(true);
             }
 
-            if(parseInt(day) > today.getDate()) {
-                setDiaryModalOpen(false );
+            if (parseInt(day) > today.getDate()) {
+                setDiaryModalOpen(false);
                 alert('미래의 일기는 작성할 수 없습니다');
             } else {
                 setEditingDiary(day);
@@ -79,19 +79,19 @@ export default function Calendar() {
 
 
     function checkTodoMode(e) {
-        if(e.target.value === 'on') {
+        if (e.target.value === 'on') {
             setCalendarMode(calendarModeEnum.TODO);
         }
     }
 
     function checkDiaryModal(e) {
-        if(e.target.value === 'on') {
+        if (e.target.value === 'on') {
             setCalendarMode(calendarModeEnum.DIARY);
         }
     }
 
     function closeDiary() {
-        if(utilModalShow) {
+        if (utilModalShow) {
             setUtilModalShow(false);
         } else {
             setDiaryModalOpen(false);
@@ -123,36 +123,62 @@ export default function Calendar() {
         setEditingDiary(0);
     }
 
-    const isDiaryModalOpen = diaryModalOpen ? <DiaryModalOpenPage closeDiary={closeDiary} editingDiary={editingDiary} monthFromToday={monthFromToday} confirmDiary={confirmDiary} removeDiary={removeDiary} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen} /> : '';
+    const isDiaryModalOpen = diaryModalOpen ?
+        <DiaryModalOpenPage closeDiary={closeDiary} editingDiary={editingDiary} monthFromToday={monthFromToday}
+                            confirmDiary={confirmDiary} removeDiary={removeDiary} utilModalShow={utilModalShow}
+                            setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/> : '';
 
     return editingDiary !== 0 && !diaryModalOpen
         ? <>
-            <Diary  day={editingDiary} monthFromToday={monthFromToday} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
+            <Diary day={editingDiary} monthFromToday={monthFromToday} closeDiary={closeDiary}
+                   confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={false} utilModalShow={utilModalShow}
+                   setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
         </>
         : <>
             <CalendarMain>
-                <CalendarMonth today={today} monthFromToday={monthFromToday} onCurrentMonthChange={(n) => setMonthFromToday(n)} setSelectedDay={(n) => setSelectedDay(n)} selectedDateRef={selectedDateRef}/>
-                <CalendarDate today={today} changeDayEventListener={changeDayEventListener} sessionTodoItemList={sessionTodoItemList} monthFromToday={monthFromToday} selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary} selectedDateRef={selectedDateRef}/>
+                <CalendarMonth today={today} monthFromToday={monthFromToday}
+                               onCurrentMonthChange={(n) => setMonthFromToday(n)}
+                               setSelectedDay={(n) => setSelectedDay(n)} selectedDateRef={selectedDateRef}/>
+                <CalendarDate today={today} changeDayEventListener={changeDayEventListener}
+                              sessionTodoItemList={sessionTodoItemList} monthFromToday={monthFromToday}
+                              selectedDay={selectedDay} calendarMode={calendarMode} day={editingDiary}
+                              selectedDateRef={selectedDateRef}/>
                 <RadioList>
                     <Radio>
-                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => checkTodoMode(e)} checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>
-                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => checkDiaryModal(e)} checked={calendarMode === calendarModeEnum.DIARY}/><label htmlFor='diaryRadio'>일기</label>
+                        <input type='radio' name='calendarMode' id='todoRadio' onChange={(e) => checkTodoMode(e)}
+                               checked={calendarMode === calendarModeEnum.TODO}/><label htmlFor='todoRadio'>할 일</label>
+                        <input type='radio' name='calendarMode' id='diaryRadio' onChange={(e) => checkDiaryModal(e)}
+                               checked={calendarMode === calendarModeEnum.DIARY}/><label htmlFor='diaryRadio'>일기</label>
                     </Radio>
                 </RadioList>
             </CalendarMain>
             <CalendarTodo>
-                <Todo today={today} toggleModal={(n) => setIsModalOpen(n)} monthFromToday={monthFromToday} selectedDay={selectedDay} todoInputValue={todoInputValue} setTodoInputValue={setTodoInputValue} setTodoCheckValue={setTodoCheckValue}/>
+                <Todo today={today} toggleModal={(n) => setIsModalOpen(n)} monthFromToday={monthFromToday}
+                      selectedDay={selectedDay} todoInputValue={todoInputValue} setTodoInputValue={setTodoInputValue}
+                      setTodoCheckValue={setTodoCheckValue}/>
             </CalendarTodo>
             <Modal monthFromToday={monthFromToday} selectedDay={selectedDay} selectedDateRef={selectedDateRef}/>
             {isDiaryModalOpen}
         </>
 }
 
-function DiaryModalOpenPage({closeDiary, editingDiary, monthFromToday, confirmDiary, removeDiary, utilModalShow, setUtilModalShow, setDiaryModalOpen}) {
+function DiaryModalOpenPage({
+                                closeDiary,
+                                editingDiary,
+                                monthFromToday,
+                                confirmDiary,
+                                removeDiary,
+                                utilModalShow,
+                                setUtilModalShow,
+                                setDiaryModalOpen
+                            }) {
     return (
         <DiaryModalContainer className='diaryModalContainer' onClick={closeDiary}>
             <DiaryModal className='diaryModal' onClick={(e) => e.stopPropagation()}>
-                <Diary  day={editingDiary} monthFromToday={monthFromToday} closeDiary={closeDiary} confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true} utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow} setDiaryModalOpen={setDiaryModalOpen}/>
+                <Diary day={editingDiary} monthFromToday={monthFromToday} closeDiary={closeDiary}
+                       confirmDiary={confirmDiary} removeDiary={removeDiary} isModal={true}
+                       utilModalShow={utilModalShow} setUtilModalShow={setUtilModalShow}
+                       setDiaryModalOpen={setDiaryModalOpen}/>
             </DiaryModal>
         </DiaryModalContainer>
     )

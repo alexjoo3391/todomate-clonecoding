@@ -2,7 +2,7 @@ import {DateService} from "./dateService.jsx";
 
 export class DiaryService extends DateService {
 
-    isDiaryHaveProperty () {
+    isDiaryHaveProperty() {
         return sessionStorage.hasOwnProperty(`diary${this.getDayString()}`);
     }
 
@@ -14,7 +14,7 @@ export class DiaryService extends DateService {
         sessionStorage.removeItem(`diary${this.getDayString()}`);
     }
 
-    getDiaryValue () {
+    getDiaryValue() {
         return JSON.parse(sessionStorage.getItem(`diary${this.getDayString()}`));
     }
 }

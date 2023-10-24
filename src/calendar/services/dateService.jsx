@@ -33,12 +33,14 @@ export class DateService {
 
                 let td = ''
 
-                if(isModal) {
-                    td = <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => changeDayEventListener(e)}>
+                if (isModal) {
+                    td = <td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`}
+                             onClick={(e) => changeDayEventListener(e)}>
                         {renderDay(i, j, weekDay, lastDay)}
                     </td>
                 } else {
-                    td = <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`} onClick={(e) => this.changeDay(e, selectedDateRef, changeDayEventListener)}>
+                    td = <Td key={i * 7 + j} className={`td ${'td' + ((i * 7 + j) - weekDay + 1).toString()}`}
+                             onClick={(e) => this.changeDay(e, selectedDateRef, changeDayEventListener)}>
                         {renderDay(i, j, weekDay, lastDay)}
                     </Td>
                 }
@@ -69,34 +71,34 @@ export class DateService {
         const tdObject = this.getTdObject(day, selectedDateRef);
         selected = tdObject['selected'];
         dayDOM = tdObject['dayDOM'];
-        dayEmoji = dayEmoji['dayEmoji'];
+        dayEmoji = tdObject['dayEmoji'];
 
-        if(day !== '') {
+        if (day !== '') {
             changeDayEventListener(day, selected, dayDOM, dayEmoji);
         }
 
 
     }
 
-    getTdObject(day = null , selectedDateRef) {
+    getTdObject(day = null, selectedDateRef) {
 
         let selected = null;
         let dayDOM = null;
         let dayEmoji = '🫥';
 
         const tbody = selectedDateRef.current.children;
-        for(let i = 0; i < tbody.length; i++) {
-            for(let j = 0; j < 6; j++) {
+        for (let i = 0; i < tbody.length; i++) {
+            for (let j = 0; j < 6; j++) {
                 const td = tbody[i].children[j];
 
-                if(td.children.length > 0) {
-                    if(td.children[0].id === day) {
+                if (td.children.length > 0) {
+                    if (td.children[0].id === day) {
                         dayEmoji = td.children[0].innerText;
                     }
-                    if(td.children[1].classList.contains('selected')) {
+                    if (td.children[1].classList.contains('selected')) {
                         selected = td.children[1];
                     }
-                    if(td.classList.contains(`td${day}`)) {
+                    if (td.classList.contains(`td${day}`)) {
                         dayDOM = td.children[1].children[0];
                     }
                 }

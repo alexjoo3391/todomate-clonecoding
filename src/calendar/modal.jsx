@@ -1,4 +1,4 @@
-import {useRecoilState} from 'recoil'
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil'
 
 import {
     changeDayStateAtom,
@@ -27,9 +27,9 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
     const [todoChangeDay, setTodoChangeDay] = useRecoilState(changeDayStateAtom);
     const [todoMemo, setTodoMemo] = useRecoilState(todoMemoAtom);
     const [todoMemoValue, setTodoMemoValue] = useRecoilState(todoMemoValueAtom);
-    const [modifyingTodoInputDisplay, setModifyingTodoInputDisplay] = useRecoilState(modifyingTodoInputDisplayAtom);
+    const setModifyingTodoInputDisplay = useSetRecoilState(modifyingTodoInputDisplayAtom);
     const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
-    const [modifyingTodoIndex, setModifyingTodoIndex] = useRecoilState(modifyingTodoIndexAtom);
+    const modifyingTodoIndex = useRecoilValue(modifyingTodoIndexAtom);
     const [modalMonthFromToday, setModalMonthFromToday] = useState(0);
 
     function getBooleanArrayByIndex(index) {
@@ -67,7 +67,7 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
     }
 
     function getArrayIfIsNull(value) {
-        if(value === null) {
+        if (value === null) {
             return [];
         }
         return value;
@@ -94,17 +94,16 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
         const newMemoCheckValue = getArrayIfIsNull(selectedObjectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1]);
 
 
-
         const todoObject = objectService.getChangedObject({
-            n : modifyingTodoIndex,
-            todoValue : newTodoValue.concat(todoValue),
-            todoCheckValue : newTodoCheckValue.concat(todoCheckValue),
-            memoValue : newMemoValue.concat(memoValue),
-            memoCheckValue : newMemoCheckValue.concat(memoCheckValue)
+            n: modifyingTodoIndex,
+            todoValue: newTodoValue.concat(todoValue),
+            todoCheckValue: newTodoCheckValue.concat(todoCheckValue),
+            memoValue: newMemoValue.concat(memoValue),
+            memoCheckValue: newMemoCheckValue.concat(memoCheckValue)
         });
 
         const todoObjectIsOnly = objectService.getChangedObject({ // 바꾸는 날의 일정이 없을 때
-            n : modifyingTodoIndex,
+            n: modifyingTodoIndex,
             todoValue,
             todoCheckValue,
             memoValue,
@@ -118,7 +117,7 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
 
     function confirmMemo(formValue) {
         const memoValueString = formValue;
-        if(memoValueString !== '') {
+        if (memoValueString !== '') {
             const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, selectedDay);
             const objectService = new ObjectService(selectedDate);
 
@@ -126,11 +125,11 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
             const memoCheckValue = objectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1];
 
             const objectValue = objectService.getChangedObject({
-                n : modifyingTodoIndex,
-                todoValue : null,
-                todoCheckValue : null,
-                memoValue : memoValue.slice(0, isModalOpen).concat(memoValueString, memoValue.slice(isModalOpen + 1)),
-                memoCheckValue : memoCheckValue.slice(0, isModalOpen).concat(1, memoCheckValue.slice(isModalOpen + 1))
+                n: modifyingTodoIndex,
+                todoValue: null,
+                todoCheckValue: null,
+                memoValue: memoValue.slice(0, isModalOpen).concat(memoValueString, memoValue.slice(isModalOpen + 1)),
+                memoCheckValue: memoCheckValue.slice(0, isModalOpen).concat(1, memoCheckValue.slice(isModalOpen + 1))
             })
 
             objectService.setObjectItem(modifyingTodoIndex, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
@@ -149,18 +148,16 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
 
         const selectedDate = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, dateService.getTdObject(null, selectedDateRef)['selected'].innerText);
         const objectService = new ObjectService(selectedDate);
-        const selectedDayString = objectService.getDayString();
-
 
         const memoValue = objectService.getObjectValue('memo')[modifyingTodoIndex - 1];
         const memoCheckValue = objectService.getObjectValue('memoCheck')[modifyingTodoIndex - 1];
 
         const objectValue = objectService.getChangedObject({
-            n : modifyingTodoIndex,
-            todoValue : null,
-            todoCheckValue : null,
-            memoValue : memoValue.slice(0, isModalOpen).concat(0, memoValue.slice(isModalOpen + 1)),
-            memoCheckValue : memoCheckValue.slice(0, isModalOpen).concat(0, memoCheckValue.slice(isModalOpen + 1))
+            n: modifyingTodoIndex,
+            todoValue: null,
+            todoCheckValue: null,
+            memoValue: memoValue.slice(0, isModalOpen).concat(0, memoValue.slice(isModalOpen + 1)),
+            memoCheckValue: memoCheckValue.slice(0, isModalOpen).concat(0, memoCheckValue.slice(isModalOpen + 1))
         })
 
         objectService.setObjectItem(modifyingTodoIndex, JSON.stringify(objectValue[modifyingTodoIndex - 1]));
@@ -174,25 +171,36 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
     const memoModalValue = isModalOpen !== -1 ? todoMemoValue[isModalOpen] ? todoMemoValue[isModalOpen] : null : null;
 
     const modal = todoChangeDay
-        ? <StyledModal>
+        ? <StyledΩModal>
             <ModalMonth today={today} modalMonthFromToday={modalMonthFromToday} setModalMonthFromToday={setModalMonth}/>
-            <ModalDate today={today} changeDayEventListener={changeDayEventListener} modalMonthFromToday={modalMonthFromToday} selectedDateRef={selectedDateRef}/>
-        </StyledModal>
+            <ModalDate today={today} changeDayEventListener={changeDayEventListener}
+                       modalMonthFromToday={modalMonthFromToday} selectedDateRef={selectedDateRef}/>
+        </StyledΩModal>
         : todoMemo
-        ? <StyledModal>
-            <Memo confirmMemo={confirmMemo} deleteMemo={deleteMemo} memoModalValue={memoModalValue}/>
-        </StyledModal>
-        : <>
-            <StyledModal className='modal'>
-                <ModalMenu>
-                    <button onClick={(e) => openModifyModal(e)}><i className="fa-solid fa-pencil"></i><br />수정하기</button>
-                    <button onClick={modalDelete}><i className="fa-solid fa-trash-can"></i><br />삭제하기</button>
-                </ModalMenu>
-                <button onClick={modalChangeDay}><div><i className="fa-solid fa-arrow-turn-down"></i></div>날짜 바꾸기</button>
-                <button onClick={modalMemo}><div><i className="fa-regular fa-square-minus"></i></div>메모</button>
-                <MemoShow memoModalValue={memoModalValue}/>
+            ? <StyledModal>
+                <Memo confirmMemo={confirmMemo} deleteMemo={deleteMemo} memoModalValue={memoModalValue}/>
             </StyledModal>
-        </>
+            : <>
+                <StyledModal className='modal'>
+                    <ModalMenu>
+                        <button onClick={(e) => openModifyModal(e)}>
+                            <i className="fa-solid fa-pencil"></i><br/>수정하기
+                        </button>
+                        <button onClick={modalDelete}>
+                            <i className="fa-solid fa-trash-can"></i><br/>삭제하기
+                        </button>
+              ,      </ModalMenu>
+                    <button onClick={modalChangeDay}>
+                        <div><i className="fa-solid fa-arrow-turn-down"></i></div>
+                        날짜 바꾸기
+                    </button>
+                    <button onClick={modalMemo}>
+                        <div><i className="fa-regular fa-square-minus"></i></div>
+                        메모
+                    </button>
+                    <MemoShow memoModalValue={memoModalValue}/>
+                </StyledModal>
+            </>
 
     return (
         <ModalContainer key={'modal'} className={`modal-container ${isModalOpen !== -1 ? 'modalShow' : ''}`}>
@@ -203,7 +211,7 @@ export default function Modal({monthFromToday, selectedDay, selectedDateRef}) {
 
 function MemoShow({memoModalValue}) {
     let memoShow = '';
-    if(memoModalValue !== null) {
+    if (memoModalValue !== null) {
         memoShow = (
             <MemoBox>
                 {memoModalValue}

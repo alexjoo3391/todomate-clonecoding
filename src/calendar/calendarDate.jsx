@@ -3,7 +3,15 @@ import {DateService} from "./services/dateService.jsx";
 import {DiaryService} from "./services/diaryService.js";
 
 // 달력 표시
-export default function CalendarDate({today, changeDayEventListener, sessionTodoItemList = {}, monthFromToday, selectedDay, calendarMode, selectedDateRef}) {
+export default function CalendarDate({
+                                         today,
+                                         changeDayEventListener,
+                                         sessionTodoItemList = {},
+                                         monthFromToday,
+                                         selectedDay,
+                                         calendarMode,
+                                         selectedDateRef
+                                     }) {
 
     const dateService = new DateService(today);
 
@@ -19,35 +27,60 @@ export default function CalendarDate({today, changeDayEventListener, sessionTodo
 
         let todoCheckCount = 0;
 
-        if(diaryService.isDiaryHaveProperty()) {
+        if (diaryService.isDiaryHaveProperty()) {
             emoji = diaryService.getDiaryValue()[0];
         }
 
-        return <DayInMonth i={i} j={j} selectedDay={selectedDay} weekDay={weekDay} today={today} monthFromToday={monthFromToday} lastDay={lastDay} todoCount={todoCount} isExist={isExist} diaryDay={diaryDay} isToday={isToday} sessionTodoItemList={sessionTodoItemList} calendarMode={calendarMode} todoCheckCount={todoCheckCount} emoji={emoji}/>
+        return <DayInMonth i={i} j={j} selectedDay={selectedDay} weekDay={weekDay} today={today}
+                           monthFromToday={monthFromToday} lastDay={lastDay} todoCount={todoCount} isExist={isExist}
+                           diaryDay={diaryDay} isToday={isToday} sessionTodoItemList={sessionTodoItemList}
+                           calendarMode={calendarMode} todoCheckCount={todoCheckCount} emoji={emoji}/>
     }
 
 
     return (
         <Table>
             <Thead>
-            <tr>
-                <th>월</th>
-                <th>화</th>
-                <th>수</th>
-                <th>목</th>
-                <th>금</th>
-                <th>토</th>
-                <th>일</th>
-            </tr>
+                <tr>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                    <th>토</th>
+                    <th>일</th>
+                </tr>
             </Thead>
             <tbody ref={selectedDateRef}>
-            {dateService.getCalendarFormat({monthFromToday, selectedDateRef, changeDayEventListener, renderDay, isModal : false})}
+            {dateService.getCalendarFormat({
+                monthFromToday,
+                selectedDateRef,
+                changeDayEventListener,
+                renderDay,
+                isModal: false
+            })}
             </tbody>
         </Table>
     )
 }
 
-function DayInMonth({i, j, selectedDay, weekDay, today, monthFromToday, lastDay, todoCount, isExist, diaryDay, isToday, sessionTodoItemList, calendarMode, todoCheckCount, emoji}) {
+function DayInMonth({
+                        i,
+                        j,
+                        selectedDay,
+                        weekDay,
+                        today,
+                        monthFromToday,
+                        lastDay,
+                        todoCount,
+                        isExist,
+                        diaryDay,
+                        isToday,
+                        sessionTodoItemList,
+                        calendarMode,
+                        todoCheckCount,
+                        emoji
+                    }) {
     const classes = `${selectedDay && parseInt(selectedDay) === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''} ${(i * 7 + j) - weekDay + 1 === today.getDate() && monthFromToday === today.getMonth() - today.getMonth() ? 'today' : ''}`
 
     if (i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
@@ -70,24 +103,30 @@ function DayInMonth({i, j, selectedDay, weekDay, today, monthFromToday, lastDay,
                 }
             }
         }
-        today.setHours(0,0,0,0);
-        if(todoUtil.dateDiff(todoDate, today) >= 0) {
+        today.setHours(0, 0, 0, 0);
+        if (todoUtil.dateDiff(todoDate, today) >= 0) {
             diaryDay = true;
         }
-        if(todoUtil.dateDiff(todoDate, today) === 0) {
+        if (todoUtil.dateDiff(todoDate, today) === 0) {
             isToday = true;
         }
     }
 
-    if(i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
+    if (i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay) {
         return (
             <>
                 {
                     calendarMode === 'todo'
-                        ? <DayBox className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</DayBox>
-                        : <DayBox className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`} id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</DayBox>
+                        ? <DayBox
+                            className={`dayBox ${isExist && todoCount < todoCheckCount ? 'dayBoxCheck' : ''} ${calendarMode === 'todo' ? 'dayBoxTodo' : ''}`}
+                            id={((i * 7 + j) - weekDay + 1).toString()}>{isExist ? todoCount !== 0 ? todoCount : '✓' : ''}</DayBox>
+                        : <DayBox
+                            className={`dayBox ${emoji === '🫥' ? 'diary' : ''} ${isToday && emoji === '🫥' ? 'diaryToday' : ''}`}
+                            id={((i * 7 + j) - weekDay + 1).toString()}>{diaryDay ? emoji : ''}</DayBox>
                 }
-                <SelectedDay className={classes}><p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p></SelectedDay>
+                <SelectedDay className={classes}>
+                    <p>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
+                </SelectedDay>
             </>
         );
     }

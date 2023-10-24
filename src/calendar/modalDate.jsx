@@ -1,16 +1,18 @@
-
 // 달력 표시
-import {ModalTable, Table} from "../styles/style.js";
+import {ModalTable} from "../styles/style.js";
 import {DateService} from "./services/dateService.jsx";
 
-export default function ModalDate({today, changeDayEventListener, todoItems = [], modalMonthFromToday, selectedDateRef}) {
+export default function ModalDate({today, changeDayEventListener, modalMonthFromToday, selectedDateRef}) {
 
     const dateService = new DateService(today);
 
     function renderDay(i, j, weekDay, lastDay) {
-        const selectedDay = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, dateService.getTdObject(null, selectedDateRef)['selected'].innerText).getDate();
-        const classes = `${selectedDay === ((i * 7 + j) - weekDay + 1) ? 'selected' : ''}`
-        return <p className={classes}>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
+        const selected = new Date(today.getFullYear(), today.getMonth() + modalMonthFromToday, dateService.getTdObject(null, selectedDateRef)['selected'].innerText);
+        const selectedDay = selected.getDate();
+        const selectedMonth = selected.getMonth();
+        const classes = `${selectedDay === ((i * 7 + j) - weekDay + 1) && selectedMonth === today.getMonth() ? 'selected' : ''}`
+        return <p
+            className={classes}>{i * 7 + j >= weekDay && i * 7 + j < lastDay.getDate() + weekDay ? i * 7 + j - weekDay + 1 : ''}</p>
     }
 
     return (
@@ -27,7 +29,13 @@ export default function ModalDate({today, changeDayEventListener, todoItems = []
             </tr>
             </thead>
             <tbody>
-            {dateService.getCalendarFormat({monthFromToday : modalMonthFromToday, selectedDateRef, changeDayEventListener, renderDay, isModal : true})}
+            {dateService.getCalendarFormat({
+                monthFromToday: modalMonthFromToday,
+                selectedDateRef,
+                changeDayEventListener,
+                renderDay,
+                isModal: true
+            })}
             </tbody>
         </ModalTable>
     )

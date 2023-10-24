@@ -15,7 +15,15 @@ import {StyledTodo, TextInput, TodoCheck, TodoCheckBox, TodoInput, TodoList, Tod
 import {ObjectService} from "./services/objectService.js";
 
 // 목표 리스트 표시
-export default function Todo({today, toggleModal, monthFromToday, selectedDay, todoInputValue, setTodoInputValue, setTodoCheckValue}) {
+export default function Todo({
+                                 today,
+                                 toggleModal,
+                                 monthFromToday,
+                                 selectedDay,
+                                 todoInputValue,
+                                 setTodoInputValue,
+                                 setTodoCheckValue
+                             }) {
 
     const selectedDate = new Date(today.getFullYear(), today.getMonth() + monthFromToday, selectedDay);
     const objectService = new ObjectService(selectedDate);
@@ -58,8 +66,13 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
                 if (modifyingTodo === i && selectModifyingTodoInput) {
                     modifyTodoInput()
                     modifyInput = <TextInput className='modifyTodoInput' type='text' defaultValue={arr[i]}
-                                         onClick={(e) => e.stopPropagation()}
-                                         onKeyUp={(e) => checkEnter(e, () => confirmModifyingTodo(n, i))}/>;
+                                             onKeyUp={(e) => checkEnter(e, () => {
+                                                 setModifyingTodoInputDisplay([false, false, false]);
+                                                 confirmModifyingTodo(n, i);
+                                             })}
+                                             onClick={(e) => e.stopPropagation()}
+                    />;
+
                 }
 
                 const todoContent = modifyInput
@@ -72,7 +85,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
 
                 let todoMemo = '';
 
-                if(newTodoMemoCheck[n - 1][i] !== 0) {
+                if (newTodoMemoCheck[n - 1][i] !== 0) {
                     todoMemo = <p><i className="fa-solid fa-square-minus"></i>메모</p>;
                     setTodoMemoValue(newTodoMemo[n - 1]);
                 }
@@ -81,7 +94,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
                     <React.Fragment key={`todoBox${n}${i}`}>
                         <TodoCheck>
                             <TodoCheckBox>
-                                <input  type="checkbox" id={`check${n}${i}`}
+                                <input type="checkbox" id={`check${n}${i}`}
                                        onChange={() => checkTodo(n, i)}
                                        checked={newTodoCheck[n - 1][i] === 1}/>
                                 <label htmlFor={`check${n}${i}`}>✓</label>
@@ -108,7 +121,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
         }
         todoExtend.push(
             <TodoInput className={`todoInput${n} ${selectedInputDisplay ? 'display' : ''}`}
-                 onClick={(e) => e.stopPropagation()}>
+                       onClick={(e) => e.stopPropagation()}>
                 <TextInput type="text" onKeyUp={(e) => checkEnter(e, () => todoInputClick(n))}/>
                 <button onClick={() => todoInputClick(n)}>+</button>
             </TodoInput>
@@ -119,7 +132,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
 
     function showInput(e, i) {
         e.stopPropagation();
-        let val = inputDisplay.slice(0, i).concat( !inputDisplay[i]).concat(inputDisplay.slice(i + 1));
+        let val = inputDisplay.slice(0, i).concat(!inputDisplay[i]).concat(inputDisplay.slice(i + 1));
         setInputDisplay(val);
         document.addEventListener('click', () => {
             setInputDisplay([false, false, false]);
@@ -132,16 +145,16 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
 
         objectService.setObjectItem(n, newTodo[n - 1]
             ? JSON.stringify({
-                todo : newTodo[n - 1].concat(val),
-                todoCheck : newTodoCheck[n - 1].concat(0),
-                memo : newTodoMemo[n - 1].concat(0),
-                memoCheck : newTodoMemoCheck[n - 1].concat(0)
+                todo: newTodo[n - 1].concat(val),
+                todoCheck: newTodoCheck[n - 1].concat(0),
+                memo: newTodoMemo[n - 1].concat(0),
+                memoCheck: newTodoMemoCheck[n - 1].concat(0)
             })
             : JSON.stringify({
-                todo : [val],
-                todoCheck : [0],
-                memo : [0],
-                memoCheck : [0]
+                todo: [val],
+                todoCheck: [0],
+                memo: [0],
+                memoCheck: [0]
             })
         )
 
@@ -162,11 +175,11 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
             isModalClick = true;
         });
         document.querySelector('.modal-container').addEventListener('click', () => {
-            if(!isModalClick) {
+            if (!isModalClick) {
                 toggleModal(-1);
                 setTodoMemo(false);
                 setTodoChangeDay(false);
-            }else {
+            } else {
                 isModalClick = false;
             }
 
@@ -180,10 +193,10 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
         const todoCheckValue = todoChecked.slice(0, i).concat(rest, todoChecked.slice(i + 1));
         const todoObject = objectService.getChangedObject({
             n,
-            todoValue : null,
+            todoValue: null,
             todoCheckValue,
-            memoValue : null,
-            memoCheckValue : null
+            memoValue: null,
+            memoCheckValue: null
         });
         objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
         setTodoCheckValue(todoObject);
@@ -195,10 +208,10 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
         const newTodoValue = sessionValue.slice(0, i).concat(value, sessionValue.slice(i + 1));
         const todoObject = objectService.getChangedObject({
             n,
-            todoValue : newTodoValue,
-            todoCheckValue : null,
-            memoValue : null,
-            memoCheckValue : null
+            todoValue: newTodoValue,
+            todoCheckValue: null,
+            memoValue: null,
+            memoCheckValue: null
         });
         objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
     }
@@ -223,13 +236,13 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
 
         const todoObject = objectService.getChangedObject({
             n,
-            todoValue : newTodoValue,
-            todoCheckValue : newTodoCheckValue,
-            memoValue : newMemoValue,
-            memoCheckValue : newMemoCheckValue
+            todoValue: newTodoValue,
+            todoCheckValue: newTodoCheckValue,
+            memoValue: newMemoValue,
+            memoCheckValue: newMemoCheckValue
         });
 
-        if(JSON.stringify(newTodoValue) !== '[]') {
+        if (JSON.stringify(newTodoValue) !== '[]') {
             objectService.setObjectItem(n, JSON.stringify(todoObject[n - 1]));
         } else {
             objectService.removeObjectItem(n);
@@ -244,7 +257,7 @@ export default function Todo({today, toggleModal, monthFromToday, selectedDay, t
 
     return (
         <StyledTodo key={'todoContainer'} className='todo'>
-            <Todos showInput={showInput} getTodoExtend={getTodoExtend} />
+            <Todos showInput={showInput} getTodoExtend={getTodoExtend}/>
         </StyledTodo>
     )
 }
@@ -254,7 +267,9 @@ function Todos({showInput, getTodoExtend}) {
         return (
             <React.Fragment key={`todo${n}`}>
                 <TodoList className='todoList' key={`todoList${n}`}>
-                    <p><i className="fa-solid fa-box"></i> 목표 {n} <button onClick={(e) => showInput(e, n - 1)}>+</button></p>
+                    <p><i className="fa-solid fa-box"></i> 목표 {n}
+                        <button onClick={(e) => showInput(e, n - 1)}>+</button>
+                    </p>
                     {getTodoExtend(n)}
                 </TodoList>
             </React.Fragment>

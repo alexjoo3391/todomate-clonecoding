@@ -18,8 +18,10 @@ export default function ModalMonth({today, modalMonthFromToday, setModalMonthFro
                 {(today.getFullYear() + (Math.floor((today.getMonth() + modalMonthFromToday) / 12)) + '년 ') + (monthFromToday > 0 ? monthFromToday : 12 - ((monthFromToday * -1) % 12)) + '월'}
             </p>
             <div>
-                <button className='PrevMonthBtn' onClick={() => handleMonthClick(false)}><i className="fa-solid fa-chevron-left"></i></button>
-                <button className='NextMonthBtn' onClick={() => handleMonthClick(true)}><i className="fa-solid fa-chevron-right"></i></button>
+                <button className='PrevMonthBtn' onClick={() => handleMonthClick(false)}><i
+                    className="fa-solid fa-chevron-left"></i></button>
+                <button className='NextMonthBtn' onClick={() => handleMonthClick(true)}><i
+                    className="fa-solid fa-chevron-right"></i></button>
             </div>
         </StyledCalendarMonth>
     )
